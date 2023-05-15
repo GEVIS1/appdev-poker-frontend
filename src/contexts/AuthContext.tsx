@@ -87,7 +87,7 @@ export function AuthProvider({ children }: Props) {
       return await signInAnonymously(firebaseAuth);
     } catch (e) {
       if (typeof e === typeof Error) {
-        return e;
+        return e as Error;
       }
       return new Error(
         'Unknown error occurred when handling anonymous signin.',
