@@ -3,3 +3,9 @@
 @tailwind components;
 @tailwind utilities;
 /* eslint-enable */
+
+/* make app cover entire screen height */
+html, body, #root, #root>div {
+  height: 100%
+}
+
