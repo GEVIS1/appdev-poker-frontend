@@ -17,3 +17,6 @@ and then it checks for rule violations with eslint.
 If the code is not up to the airbnb standards the commit will be denied.
 
 The configuration for this was inspired by [this](https://github.com/pappijx/Vite-react-eslint-prettier-husky-setup/blob/master/readme.md) post.
+
+Credits:
+Spinner SVG: https://www.svgrepo.com/svg/69294/poker-chip
