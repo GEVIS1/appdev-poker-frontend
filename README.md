@@ -20,3 +20,4 @@ The configuration for this was inspired by [this](https://github.com/pappijx/Vit
 
 Credits:
 Spinner SVG: https://www.svgrepo.com/svg/69294/poker-chip
+Hamburger menu SVG: https://www.svgrepo.com/svg/86620/poker-pieces
