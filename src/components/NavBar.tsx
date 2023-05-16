@@ -1,13 +1,13 @@
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 
 import { AuthContext } from '../contexts/AuthContext';
 import Spinner from './Spinner';
+import HamburgerChips from '../assets/poker-pieces-svgrepo-com.svg';
 
 function NavBar() {
   const {
     logOutUser, user, waitingForAuth, processingLogin, anonymousSignIn,
   } = useContext(AuthContext);
-  const [showHamburgerMenu, setShowHamburgerMenu] = useState(false);
 
   const handleLoginButton = async () => {
     if (anonymousSignIn) {
@@ -25,69 +25,42 @@ function NavBar() {
     }
   };
 
-  const testButtons = (
-    <>
-      {['Home', 'About', 'Contact', 'Address', 'Policy'].map((buttonName) => (
-        <button
-          className="bg-gray-400 text-white border-2 rounded-lg m-1"
-          key={buttonName}
-          type="button"
-          onClick={() => window.console.log(`${buttonName} clicked!`)}
-        >
-          {buttonName}
-        </button>
-      ))}
-    </>
-  );
-
   const loginButton = (
     <button
       type="button"
-      className="bg-green-500 hover:bg-green-800 text-white font-bold py-2 px-4 rounded mr-2 w-24"
+      className="bg-green-500 hover:bg-green-800 text-white font-bold py-2 px-4 rounded w-24"
       onClick={user ? handleLogoutButton : handleLoginButton}
       disabled={processingLogin || waitingForAuth}
     >
-      {/* temporary */}
-      {/* eslint-disable-next-line no-nested-ternary */}
-      {processingLogin || waitingForAuth ? (
-        <div className="flex items-center justify-center">
-          <Spinner className="w-6" />
-        </div>
-      ) : user ? (
-        'Logout'
-      ) : (
-        'Login'
-      )}
+      <div className="flex items-center justify-center">
+        {processingLogin || waitingForAuth ? <Spinner className="w-6" /> : null}
+        {user ? 'Logout' : 'Login'}
+      </div>
     </button>
   );
 
   const menu = (
     <div id="menu-container">
       <nav id="menu-spread" className="hidden sm:block">
-        {testButtons}
+        {loginButton}
       </nav>
-      <div id="menu-hamburger" className="block sm:hidden">
-        <button
-          type="button"
-          className=""
-          onClick={() => setShowHamburgerMenu(true)}
-          onPointerLeave={() => setShowHamburgerMenu(false)}
-        >
-          Hamburger Icon
-        </button>
-        {showHamburgerMenu && (
-          <div className="absolute left-0 top-0 rounded-xl bg-slate-600 w-52 m-2 p-2">
-            <div className="flex flex-col">{...[loginButton, testButtons]}</div>
-          </div>
-        )}
-      </div>
+      <button type="button" className="group block sm:hidden p-2">
+        <img
+          alt="A stack of poker chips in the likeness of a hamburger"
+          src={HamburgerChips}
+          className="w-7 m-auto"
+        />
+        <div className="hidden group-hover:block group-hover:absolute group-hover:left-1/2 group-hover:top-1/2 group-hover:transform group-hover:-translate-x-1/2 group-hover:-translate-y-1/2 group-hover:rounded-xl group-hover:bg-green-700 group-hover:m-2 group-hover:p-4">
+          <div className="grid">{loginButton}</div>
+        </div>
+      </button>
     </div>
   );
 
   return (
     <div
       id="navbar"
-      className="h-10 flex items-center p-7 bg-green-600 rounded-b"
+      className="h-10 flex items-center py-7 px-2 bg-green-600 rounded-b"
     >
       {menu}
     </div>
