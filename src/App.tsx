@@ -9,21 +9,7 @@ function App() {
 
   const content = (
     <div className="m-4 flex justify-center items-center h-screen">
-      {!user ? (
-        <div>Not logged in...</div>
-      ) : (
-        <>
-          <div>
-            You are logged in as:
-            {' '}
-            {user.displayName ? user.displayName : 'Anonymous'}
-          </div>
-          <div>
-            UID:
-            {user?.uid}
-          </div>
-        </>
-      )}
+      {!user ? <div>Not logged in...</div> : <div>Please add Game here</div>}
     </div>
   );
 
