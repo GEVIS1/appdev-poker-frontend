@@ -1,9 +1,11 @@
 import {
   Auth,
+  GoogleAuthProvider,
   User,
   UserCredential,
   onAuthStateChanged,
   signInAnonymously,
+  signInWithPopup,
   signOut,
 } from 'firebase/auth';
 import {
@@ -19,6 +21,7 @@ export interface AuthContextData {
   user: User | null;
   logOutUser: (() => Promise<void>) | null;
   anonymousSignIn: (() => Promise<UserCredential | Error>) | null;
+  googleSignIn: (() => Promise<UserCredential | Error>) | null;
   waitingForAuth: boolean;
   processingLogin: boolean;
   firebaseAuth: Auth;
@@ -30,6 +33,7 @@ export const AuthContext = createContext<AuthContextData>({
   waitingForAuth: true,
   processingLogin: false,
   anonymousSignIn: null,
+  googleSignIn: null,
   firebaseAuth,
 });
 
@@ -97,6 +101,20 @@ export function AuthProvider({ children }: Props) {
     }
   };
 
+  const googleSignIn = async () => {
+    try {
+      setProcessingLogin(true);
+      return await signInWithPopup(firebaseAuth, new GoogleAuthProvider());
+    } catch (e) {
+      if (typeof e === typeof Error) {
+        return e as Error;
+      }
+      return new Error('Unknown error occurred when handling Google signin.');
+    } finally {
+      setProcessingLogin(false);
+    }
+  };
+
   /*
    * Wrap the value in useMemo to prevent unnecessary re-renders.
    * https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/jsx-no-constructed-context-values.md
@@ -106,6 +124,7 @@ export function AuthProvider({ children }: Props) {
       user,
       logOutUser,
       anonymousSignIn,
+      googleSignIn,
       waitingForAuth,
       firebaseAuth,
       processingLogin,
