@@ -50,9 +50,9 @@ function Menu() {
     >
       <div className="flex items-center justify-center">
         {processingLogin || waitingForAuth ? (
-          <Spinner className="w-6" />
+          <Spinner testId="login-spinner-anonymous" className="w-6" />
         ) : (
-          <div>Anonymous Login</div>
+          <div data-testid="login-button-anonymous">Anonymous Login</div>
         )}
       </div>
     </button>
@@ -67,9 +67,9 @@ function Menu() {
     >
       <div className="flex items-center justify-center">
         {processingLogin || waitingForAuth ? (
-          <Spinner className="w-6" />
+          <Spinner testId="login-spinner-google" className="w-6" />
         ) : (
-          <div>Google Login</div>
+          <div data-testid="login-button-google">Google Login</div>
         )}
       </div>
     </button>
@@ -91,20 +91,24 @@ function Menu() {
     >
       <div className="flex items-center justify-center">
         {processingLogin || waitingForAuth ? (
-          <Spinner className="w-6" />
+          <Spinner testId="logout-spinner" className="w-6" />
         ) : (
-          <div>Logout</div>
+          <div data-testid="logout-button">Logout</div>
         )}
       </div>
     </button>
   );
 
   return (
-    <div id="menu-container">
-      <nav id="menu-spread" className="hidden sm:flex gap-2">
+    <div id="menu-container" data-testid="menu">
+      <nav
+        id="menu-spread"
+        data-testid="menu-desktop"
+        className="hidden sm:flex gap-2"
+      >
         {user ? logout : logins}
       </nav>
-      <button type="button" className="group block sm:hidden p-2">
+      <div data-testid="menu-mobile" className="group block sm:hidden p-2">
         <img
           alt="A stack of poker chips in the likeness of a hamburger"
           src={HamburgerChips}
@@ -113,7 +117,7 @@ function Menu() {
         <div className="hidden group-hover:block group-hover:absolute group-hover:left-1/2 group-hover:top-1/2 group-hover:transform group-hover:-translate-x-1/2 group-hover:-translate-y-1/2 group-hover:rounded-xl group-hover:bg-green-700 group-hover:m-2 group-hover:p-4">
           <div className="grid gap-2">{user ? logout : logins}</div>
         </div>
-      </button>
+      </div>
     </div>
   );
 }
