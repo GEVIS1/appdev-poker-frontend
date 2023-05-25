@@ -41,7 +41,7 @@ function Menu() {
     }
   };
 
-  const anonymousLogin = (
+  const anonymousLogin = (testId: string) => (
     <button
       type="button"
       className="bg-green-500 hover:bg-green-800 text-white font-bold py-2 px-4 rounded max-w-sm"
@@ -50,15 +50,20 @@ function Menu() {
     >
       <div className="flex items-center justify-center">
         {processingLogin || waitingForAuth ? (
-          <Spinner testId="login-spinner-anonymous" className="w-6" />
+          <Spinner
+            testId={`login-spinner-${testId}anonymous`}
+            className="w-6"
+          />
         ) : (
-          <div data-testid="login-button-anonymous">Anonymous Login</div>
+          <div data-testid={`login-button-${testId}anonymous`}>
+            Anonymous Login
+          </div>
         )}
       </div>
     </button>
   );
 
-  const googleLogin = (
+  const googleLogin = (testId: string) => (
     <button
       type="button"
       className="bg-green-500 hover:bg-green-800 text-white font-bold py-2 px-4 rounded max-w-sm"
@@ -67,22 +72,22 @@ function Menu() {
     >
       <div className="flex items-center justify-center">
         {processingLogin || waitingForAuth ? (
-          <Spinner testId="login-spinner-google" className="w-6" />
+          <Spinner testId={`login-spinner-${testId}google`} className="w-6" />
         ) : (
-          <div data-testid="login-button-google">Google Login</div>
+          <div data-testid={`login-button-${testId}google`}>Google Login</div>
         )}
       </div>
     </button>
   );
 
-  const logins = (
+  const logins = (testId = '') => (
     <>
-      {anonymousLogin}
-      {googleLogin}
+      {anonymousLogin(testId)}
+      {googleLogin(testId)}
     </>
   );
 
-  const logout = (
+  const logout = (testId = '') => (
     <button
       type="button"
       className="bg-green-500 hover:bg-green-800 text-white font-bold py-2 px-4 rounded max-w-sm"
@@ -91,9 +96,9 @@ function Menu() {
     >
       <div className="flex items-center justify-center">
         {processingLogin || waitingForAuth ? (
-          <Spinner testId="logout-spinner" className="w-6" />
+          <Spinner testId={`logout-${testId}spinner`} className="w-6" />
         ) : (
-          <div data-testid="logout-button">Logout</div>
+          <div data-testid={`logout-${testId}button`}>Logout</div>
         )}
       </div>
     </button>
@@ -106,7 +111,7 @@ function Menu() {
         data-testid="menu-desktop"
         className="hidden sm:flex gap-2"
       >
-        {user ? logout : logins}
+        {user ? logout() : logins()}
       </nav>
       <div data-testid="menu-mobile" className="group block sm:hidden p-2">
         <img
@@ -115,7 +120,9 @@ function Menu() {
           className="w-7 m-auto"
         />
         <div className="hidden group-hover:block group-hover:absolute group-hover:left-1/2 group-hover:top-1/2 group-hover:transform group-hover:-translate-x-1/2 group-hover:-translate-y-1/2 group-hover:rounded-xl group-hover:bg-green-700 group-hover:m-2 group-hover:p-4">
-          <div className="grid gap-2">{user ? logout : logins}</div>
+          <div className="grid gap-2">
+            {user ? logout('mobile-') : logins('mobile-')}
+          </div>
         </div>
       </div>
     </div>

@@ -26,13 +26,9 @@ const waitingForAuth = {
   },
 };
 
-// Resize window
-// window.innerWidth = 200;
-// window.dispatchEvent(new Event('resize'));
-
-// waitingForAuth
-// processingLogin
 afterEach(() => {
+  waitingForAuth.set = false;
+  processingLogin.set = false;
   vi.restoreAllMocks();
 });
 
@@ -51,26 +47,53 @@ beforeEach(() => {
 });
 
 describe('Menu component tests', () => {
-  it('Should show spinner on login buttons while waiting for auth context', () => {
-    processingLogin.set = true;
-    waitingForAuth.set = true;
-    render(<Menu />);
+  describe('Login Button Spinners', () => {
+    it('Should show spinner on login buttons while waiting for auth context', () => {
+      waitingForAuth.set = true;
 
-    const spinnerAnonymous = screen.getAllByTestId(
-      'login-spinner-anonymous',
-    )[0];
-    const spinnerGoogle = screen.getAllByTestId('login-spinner-google')[0];
+      render(<Menu />);
 
-    expect(spinnerAnonymous).toBeVisible();
-    expect(spinnerGoogle).toBeVisible();
-  });
+      const spinnerAnonymous = screen.getByTestId('login-spinner-anonymous');
+      const spinnerMobileAnonymous = screen.getByTestId(
+        'login-spinner-mobile-anonymous',
+      );
+      const spinnerGoogle = screen.getByTestId('login-spinner-google');
+      const spinnerMobileGoogle = screen.getByTestId(
+        'login-spinner-mobile-google',
+      );
 
-  it('Should not show spinner on login buttons while not waiting for auth context', () => {
-    processingLogin.set = false;
-    waitingForAuth.set = false;
-    render(<Menu />);
+      expect(spinnerAnonymous).toBeVisible();
+      expect(spinnerGoogle).toBeVisible();
+      expect(spinnerMobileAnonymous).toBeVisible();
+      expect(spinnerMobileGoogle).toBeVisible();
+    });
 
-    expect(screen.queryByTestId('login-spinner-anonymous')).toBeNull();
-    expect(screen.queryByTestId('login-spinner-google')).toBeNull();
+    it('Should show spinner on login buttons while processing a login', () => {
+      processingLogin.set = true;
+
+      render(<Menu />);
+
+      const spinnerAnonymous = screen.getByTestId('login-spinner-anonymous');
+      const spinnerMobileAnonymous = screen.getByTestId(
+        'login-spinner-mobile-anonymous',
+      );
+      const spinnerGoogle = screen.getByTestId('login-spinner-google');
+      const spinnerMobileGoogle = screen.getByTestId(
+        'login-spinner-mobile-google',
+      );
+
+      expect(spinnerAnonymous).toBeVisible();
+      expect(spinnerGoogle).toBeVisible();
+      expect(spinnerMobileAnonymous).toBeVisible();
+      expect(spinnerMobileGoogle).toBeVisible();
+    });
+
+    it('Should not show spinner on login buttons while not waiting for auth context or processing login', () => {
+      render(<Menu />);
+      expect(screen.queryByTestId('login-spinner-anonymous')).toBeNull();
+      expect(screen.queryByTestId('login-spinner-google')).toBeNull();
+      expect(screen.queryByTestId('login-spinner-mobile-anonymous')).toBeNull();
+      expect(screen.queryByTestId('login-spinner-mobile-google')).toBeNull();
+    });
   });
 });
