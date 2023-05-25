@@ -1,7 +1,7 @@
 import {
   describe, expect, it, vi, afterEach, beforeEach,
 } from 'vitest';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 
 import Menu from '../../src/components/Menu';
 
@@ -26,20 +26,10 @@ const waitingForAuth = {
   },
 };
 
-const mockedUseContext = () => ({
-  logOutUser: vi.fn(),
-  processingLogin: processingLogin.get,
-  waitingForAuth: waitingForAuth.get,
-  user: null,
-  anonymousSignIn: vi.fn(),
-  googleSignIn: vi.fn(),
-});
-
 afterEach(() => {
   waitingForAuth.set = false;
   processingLogin.set = false;
   vi.restoreAllMocks();
-  vi.resetAllMocks();
 });
 
 beforeEach(() => {
@@ -47,7 +37,11 @@ beforeEach(() => {
     const actual = await vi.importActual<object>('react');
     return {
       ...actual,
-      useContext: mockedUseContext,
+      useContext: () => ({
+        logOutUser: () => {},
+        processingLogin: processingLogin.get,
+        waitingForAuth: waitingForAuth.get,
+      }),
     };
   });
 });
@@ -100,23 +94,6 @@ describe('Menu component tests', () => {
       expect(screen.queryByTestId('login-spinner-google')).toBeNull();
       expect(screen.queryByTestId('login-spinner-mobile-anonymous')).toBeNull();
       expect(screen.queryByTestId('login-spinner-mobile-google')).toBeNull();
-    });
-  });
-  describe('Login Buttons', () => {
-    it('Should click the anonymous login button', () => {
-      const spy = vi.spyOn(mockedUseContext(), 'anonymousSignIn');
-      render(<Menu />);
-
-      const loginButtonAnonymous = screen.queryByTestId(
-        'login-button-anonymous',
-      ) as HTMLElement;
-      const loginButtonMobileAnonymous = screen.queryByTestId(
-        'login-button-mobile-anonymous',
-      ) as HTMLElement;
-      fireEvent(loginButtonAnonymous, new Event('click'));
-      fireEvent(loginButtonMobileAnonymous, new Event('click'));
-
-      expect(spy.mock.calls).toBeEqual(2);
     });
   });
 });

@@ -47,6 +47,7 @@ function Menu() {
       className="bg-green-500 hover:bg-green-800 text-white font-bold py-2 px-4 rounded max-w-sm"
       onClick={handleAnonymousLoginButton}
       disabled={processingLogin || waitingForAuth}
+      data-testid={`login-button-${testId}anonymous`}
     >
       <div className="flex items-center justify-center">
         {processingLogin || waitingForAuth ? (
@@ -55,7 +56,7 @@ function Menu() {
             className="w-6"
           />
         ) : (
-          <div data-testid={`login-button-${testId}anonymous`}>
+          <div data-testid={`login-button-text-${testId}anonymous`}>
             Anonymous Login
           </div>
         )}
@@ -69,12 +70,15 @@ function Menu() {
       className="bg-green-500 hover:bg-green-800 text-white font-bold py-2 px-4 rounded max-w-sm"
       onClick={handleGoogleLoginButton}
       disabled={processingLogin || waitingForAuth}
+      data-testid={`login-button-${testId}google`}
     >
       <div className="flex items-center justify-center">
         {processingLogin || waitingForAuth ? (
           <Spinner testId={`login-spinner-${testId}google`} className="w-6" />
         ) : (
-          <div data-testid={`login-button-${testId}google`}>Google Login</div>
+          <div data-testid={`login-button-text-${testId}google`}>
+            Google Login
+          </div>
         )}
       </div>
     </button>
