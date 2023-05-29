@@ -17,3 +17,12 @@ html, body, #root, #root>div {
 .spinner {
     animation: spin 2s linear infinite;
 }
+
+.h-gamearea {
+  /* 
+    The height of the game area. Basically the height of the screen minus the navbar height.
+    There should be a better way to do this..
+   */
+  --navbar-height: 3.5rem;
+  @apply h-[calc(100vh-var(--navbar-height))]
+}

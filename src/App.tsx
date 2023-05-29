@@ -19,7 +19,7 @@ function App() {
       {!waitingForAuth && !processingLogin ? (
         content
       ) : (
-        <div className="m-4 flex justify-center items-center h-screen">
+        <div className="flex justify-center items-center h-gamearea">
           <Spinner className="w-20" />
         </div>
       )}
