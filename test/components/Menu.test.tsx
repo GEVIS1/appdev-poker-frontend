@@ -15,6 +15,7 @@ const processingLogin = {
     this.state = newState;
   },
 };
+
 const waitingForAuth = {
   state: false,
 
@@ -26,10 +27,13 @@ const waitingForAuth = {
   },
 };
 
+const anonymousSignInSpy = vi.fn();
+
 const mocks = vi.hoisted(() => {
   const mockedUseContext = () => ({
     processingLogin: processingLogin.get,
     waitingForAuth: waitingForAuth.get,
+    anonymousSignIn: anonymousSignInSpy,
   });
 
   return {
@@ -102,6 +106,7 @@ describe('Menu component tests', () => {
       expect(screen.queryByTestId('login-spinner-mobile-google')).toBeNull();
     });
   });
+
   describe('Login Buttons', () => {
     it('Should click the anonymous login button', () => {
       render(<Menu />);
@@ -111,10 +116,11 @@ describe('Menu component tests', () => {
       const loginButtonMobileAnonymous = screen.queryByTestId(
         'login-button-mobile-anonymous',
       ) as HTMLElement;
+
       fireEvent.click(loginButtonAnonymous);
       fireEvent.click(loginButtonMobileAnonymous);
 
-      // use doMock or this: https://stackoverflow.com/questions/54691799/how-to-test-a-react-component-that-is-dependent-on-usecontext-hook
+      expect(anonymousSignInSpy).toHaveBeenCalledTimes(2);
     });
   });
 });
