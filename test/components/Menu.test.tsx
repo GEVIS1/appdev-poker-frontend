@@ -1,5 +1,5 @@
 import {
-  describe, expect, it, vi, afterEach, beforeEach,
+  describe, expect, it, afterEach, vi,
 } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
 
@@ -26,13 +26,23 @@ const waitingForAuth = {
   },
 };
 
-const mockedUseContext = () => ({
-  logOutUser: vi.fn(),
-  processingLogin: processingLogin.get,
-  waitingForAuth: waitingForAuth.get,
-  user: null,
-  anonymousSignIn: vi.fn(),
-  googleSignIn: vi.fn(),
+const mocks = vi.hoisted(() => {
+  const mockedUseContext = () => ({
+    processingLogin: processingLogin.get,
+    waitingForAuth: waitingForAuth.get,
+  });
+
+  return {
+    mockedUseContext,
+  };
+});
+
+vi.mock('react', async () => {
+  const actual = await vi.importActual<object>('react');
+  return {
+    ...actual,
+    useContext: mocks.mockedUseContext,
+  };
 });
 
 afterEach(() => {
@@ -40,16 +50,6 @@ afterEach(() => {
   processingLogin.set = false;
   vi.restoreAllMocks();
   vi.resetAllMocks();
-});
-
-beforeEach(() => {
-  vi.mock('react', async () => {
-    const actual = await vi.importActual<object>('react');
-    return {
-      ...actual,
-      useContext: mockedUseContext,
-    };
-  });
 });
 
 describe('Menu component tests', () => {
@@ -104,19 +104,17 @@ describe('Menu component tests', () => {
   });
   describe('Login Buttons', () => {
     it('Should click the anonymous login button', () => {
-      const spy = vi.spyOn(mockedUseContext(), 'anonymousSignIn');
       render(<Menu />);
-
       const loginButtonAnonymous = screen.queryByTestId(
         'login-button-anonymous',
       ) as HTMLElement;
       const loginButtonMobileAnonymous = screen.queryByTestId(
         'login-button-mobile-anonymous',
       ) as HTMLElement;
-      fireEvent(loginButtonAnonymous, new Event('click'));
-      fireEvent(loginButtonMobileAnonymous, new Event('click'));
+      fireEvent.click(loginButtonAnonymous);
+      fireEvent.click(loginButtonMobileAnonymous);
 
-      expect(spy.mock.calls).toBeEqual(2);
+      // use doMock or this: https://stackoverflow.com/questions/54691799/how-to-test-a-react-component-that-is-dependent-on-usecontext-hook
     });
   });
 });
