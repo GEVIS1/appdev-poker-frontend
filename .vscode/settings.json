@@ -1,6 +1,8 @@
 {
     "files.eol": "\n",
     "cSpell.words": [
+        "firestore",
         "tailwindcss"
-    ]
+    ],
+    "terminal.integrated.defaultProfile.windows": "Git Bash"
 }
