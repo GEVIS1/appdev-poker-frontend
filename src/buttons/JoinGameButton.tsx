@@ -3,7 +3,7 @@ interface JoinGameProps {
   gameId: string;
 }
 
-function JoinGame({ open, gameId }: JoinGameProps) {
+function JoinGameButton({ open, gameId }: JoinGameProps) {
   const openColor = 'bg-green-600';
   const closedColor = 'bg-red-600';
   return (
@@ -13,7 +13,7 @@ function JoinGame({ open, gameId }: JoinGameProps) {
       onClick={() => {
         // TODO: Join game logic here
         if (open) {
-          window.location.href = `/game/${gameId}`;
+          window.history.pushState('game', 'PokerGame', `/game/${gameId}`);
         } else {
           alert('Game is full!');
         }
@@ -24,8 +24,8 @@ function JoinGame({ open, gameId }: JoinGameProps) {
   );
 }
 
-JoinGame.defaultProps = {
+JoinGameButton.defaultProps = {
   open: true,
 };
 
-export default JoinGame;
+export default JoinGameButton;
