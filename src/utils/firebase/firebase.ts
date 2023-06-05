@@ -2,6 +2,7 @@
 import { initializeApp } from 'firebase/app';
 import { connectAuthEmulator, getAuth } from 'firebase/auth';
 import {
+  collection,
   connectFirestoreEmulator,
   initializeFirestore,
   persistentLocalCache,
@@ -29,6 +30,8 @@ const firestore = initializeFirestore(app, {
     : undefined,
 });
 
+const gamesReference = collection(firestore, 'games');
+
 // Connect to the Firebase emulator if running locally
 if (import.meta.env.DEV) {
   window.console.log('Connecting to the Firebase emulator...');
@@ -44,4 +47,4 @@ if (import.meta.env.DEV) {
 }
 
 export default app;
-export { firebaseAuth, firestore };
+export { firebaseAuth, firestore, gamesReference };
