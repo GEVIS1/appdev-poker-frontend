@@ -7,7 +7,11 @@ import {
   useState,
 } from 'react';
 import {
-  Unsubscribe, collection, onSnapshot, query,
+  Unsubscribe,
+  collection,
+  onSnapshot,
+  orderBy,
+  query,
 } from 'firebase/firestore';
 
 import { firestore } from '../utils/firebase/firebase';
@@ -16,19 +20,21 @@ import { PokerGame, pokerGameConverter } from '../utils/poker/poker';
 
 export interface LobbyContextData {
   gameData: PokerGame[];
+  waitingForLobbyData: boolean;
 }
 
 export const LobbyContext = createContext<LobbyContextData>({
   gameData: [],
+  waitingForLobbyData: true,
 });
 
 interface LobbyProviderProps {
   children: ReactElement[] | ReactElement;
 }
 
-export function LobbyProvider({ children }: LobbyProviderProps) {
+export default function LobbyProvider({ children }: LobbyProviderProps) {
   const [waitingForLobbyData, setWaitingForLobbyData] = useState(true);
-  const [gameData, setGameData] = useState<PokerGame[]>();
+  const [gameData, setGameData] = useState<PokerGame[]>([]);
 
   const { user } = useContext(AuthContext);
 
@@ -46,7 +52,10 @@ export function LobbyProvider({ children }: LobbyProviderProps) {
         throw Error('Could not get reference to games collection.');
       }
 
-      const q = query(gameDataCollectionRef).withConverter(pokerGameConverter);
+      const q = query(
+        gameDataCollectionRef,
+        orderBy('createdAt', 'desc'),
+      ).withConverter(pokerGameConverter);
       unsubscribe = onSnapshot(
         q,
         { includeMetadataChanges: true },
@@ -69,8 +78,8 @@ export function LobbyProvider({ children }: LobbyProviderProps) {
    */
   const value = useMemo(
     () => ({
-      waitingForLobbyData,
       gameData,
+      waitingForLobbyData,
     }),
     [waitingForLobbyData, gameData],
   );
