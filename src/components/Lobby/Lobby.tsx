@@ -1,48 +1,17 @@
+import { useContext } from 'react';
 import { User } from 'firebase/auth';
-import { useState } from 'react';
 
-import JoinGame from '../../buttons/JoinGame';
-import CreateGame from '../../buttons/CreateGame';
+import { LobbyContext } from '../../contexts/LobbyContext';
 
-import { Game } from './Lobby.d';
-
-const mockData: Game[] = [
-  {
-    title: 'Poker Game',
-    owner: 'Cassius Marcellus Coolidge',
-    players: ['Dog', 'Dog', 'Dog', 'Dog'],
-    open: false,
-    gameId: '1234',
-  },
-  {
-    title: 'The coolest game in the world',
-    owner: 'Mr. Freeze',
-    players: ['Mr. Freeze', 'Batman', 'Robin'],
-    open: true,
-    gameId: '5678',
-  },
-  {
-    title: 'Mushroom kingdom',
-    owner: 'Bowser',
-    players: ['Bowser', 'Luigi', 'Mario', 'Princess Peach'],
-    open: false,
-    gameId: '9098',
-  },
-  {
-    title: 'GRDJG$($#JKL#$%$(FDG$dwad2ad2ad2a',
-    owner: 'Missingno',
-    players: [],
-    open: true,
-    gameId: '7654',
-  },
-];
+import JoinGameButton from '../../buttons/JoinGameButton';
+import CreateGameButton from '../../buttons/CreateGameButton';
 
 interface LobbyProps {
   user: User | null;
 }
 
 function Lobby({ user }: LobbyProps) {
-  const [gameData, setGameData] = useState<Game[]>(mockData);
+  const { gameData } = useContext(LobbyContext);
 
   return (
     <div
@@ -54,23 +23,23 @@ function Lobby({ user }: LobbyProps) {
         <span>Owner: </span>
         <span>Players: </span>
         <div className="ml-auto mr-auto flex justify-center">
-          {user ? <CreateGame setGameData={setGameData} /> : null}
+          {user ? <CreateGameButton /> : null}
         </div>
       </div>
       {gameData.map(({
-        title, owner, players, open, gameId,
+        gameName, gameId, creator, players, open,
       }) => (
         <div
           className="grid gap-2 grid-cols-2 grid-rows-2 md:grid-cols-4 md:grid-rows-1 p-1 bg-blue-100"
-          key={title + owner}
+          key={gameId}
         >
-          <span className="overflow-ellipsis overflow-hidden">{title}</span>
-          <span className="overflow-ellipsis overflow-hidden">{owner}</span>
+          <span className="overflow-ellipsis overflow-hidden">{gameName}</span>
+          <span className="overflow-ellipsis overflow-hidden">{creator}</span>
           <span className="overflow-ellipsis overflow-hidden">
             {players.join(', ')}
           </span>
           <div className="ml-auto mr-auto flex justify-center">
-            {user ? <JoinGame open={open} gameId={gameId} /> : null}
+            {user ? <JoinGameButton open={open} gameId={gameId} /> : null}
           </div>
         </div>
       ))}
