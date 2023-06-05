@@ -15,7 +15,7 @@ import {
   useMemo,
   useState,
 } from 'react';
-import { firebaseAuth } from '../utils/firebase';
+import { firebaseAuth } from '../utils/firebase/firebase';
 
 export interface AuthContextData {
   user: User | null;
