@@ -10,6 +10,7 @@ function JoinGameButton({ open, gameId }: JoinGameProps) {
     <button
       type="button"
       className={`w-20 rounded-sm ${open ? openColor : closedColor}`}
+      data-testid="join-game-button"
       onClick={() => {
         // TODO: Join game logic here
         if (open) {
