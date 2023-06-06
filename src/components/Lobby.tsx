@@ -1,10 +1,10 @@
 import { useContext } from 'react';
 import { User } from 'firebase/auth';
 
-import { LobbyContext } from '../../contexts/LobbyContext';
+import { LobbyContext } from '../contexts/LobbyContext';
 
-import JoinGameButton from '../../buttons/JoinGameButton';
-import CreateGameButton from '../../buttons/CreateGameButton';
+import JoinGameButton from '../buttons/JoinGameButton';
+import CreateGameButton from '../buttons/CreateGameButton';
 
 interface LobbyProps {
   user: User | null;

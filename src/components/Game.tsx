@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
 
-import Lobby from './Lobby/Lobby';
+import Lobby from './Lobby';
 import LobbyProvider from '../contexts/LobbyContext';
 
 function Game() {
