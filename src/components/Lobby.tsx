@@ -17,10 +17,10 @@ function Lobby({ user }: LobbyProps) {
     <div
       id="lobby"
       data-testid="lobby"
-      className="flex flex-col border border-dashed rounded-lg p-4 gap-3 overflow-y-scroll max-w-max"
+      className="flex flex-col border-2 border-green-900 rounded-lg p-4 gap-1 w-full"
     >
       <div
-        className="grid gap-2 grid-cols-2 grid-rows-2 md:grid-cols-4 md:grid-rows-1 p-1 bg-blue-100"
+        className="grid gap-2 grid-cols-2 grid-rows-2 md:grid-cols-4 md:grid-rows-1 p-2 bg-green-600 rounded-sm"
         data-testid="lobby-header"
       >
         <span>Roomname: </span>
@@ -30,37 +30,42 @@ function Lobby({ user }: LobbyProps) {
           {user ? <CreateGameButton /> : null}
         </div>
       </div>
-      {gameData.map(({
-        gameName, gameId, creator, players, open,
-      }) => (
-        <div
-          className="grid gap-2 grid-cols-2 grid-rows-2 md:grid-cols-4 md:grid-rows-1 p-1 bg-blue-100"
-          key={gameId}
-          data-testid="lobby-game"
-        >
-          <span
-            data-testid="lobby-game-name"
-            className="overflow-ellipsis overflow-hidden"
+      <div
+        data-testid="lobby-games-container"
+        className="flex flex-col gap-1 overflow-auto no-scrollbar"
+      >
+        {gameData.map(({
+          gameName, gameId, creator, players, open,
+        }) => (
+          <div
+            className="grid gap-2 grid-cols-2 md:grid-cols-4 p-2 bg-green-700 rounded-md transition-all"
+            key={gameId}
+            data-testid="lobby-game"
           >
-            {gameName}
-          </span>
-          <span
-            data-testid="lobby-game-creator"
-            className="overflow-ellipsis overflow-hidden"
-          >
-            {creator}
-          </span>
-          <span
-            data-testid="lobby-game-players"
-            className="overflow-ellipsis overflow-hidden"
-          >
-            {players.join(', ')}
-          </span>
-          <div className="ml-auto mr-auto flex justify-center">
-            {user ? <JoinGameButton open={open} gameId={gameId} /> : null}
+            <span
+              data-testid="lobby-game-name"
+              className="overflow-ellipsis overflow-hidden"
+            >
+              {gameName}
+            </span>
+            <span
+              data-testid="lobby-game-creator"
+              className="overflow-ellipsis overflow-hidden"
+            >
+              {creator}
+            </span>
+            <span
+              data-testid="lobby-game-players"
+              className="overflow-ellipsis overflow-hidden"
+            >
+              {players.join(', ')}
+            </span>
+            <div className="ml-auto mr-auto flex justify-center items-end">
+              {user ? <JoinGameButton open={open} gameId={gameId} /> : null}
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 }
