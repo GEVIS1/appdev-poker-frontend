@@ -1,45 +1,11 @@
 import { render, screen } from '@testing-library/react';
-import {
-  expect,
-  // beforeAll,
-  // beforeEach,
-  // afterEach,
-  describe,
-  it,
-} from 'vitest';
+import { expect, describe, it } from 'vitest';
 import { faker } from '@faker-js/faker';
-import {
-  // signInWithEmailAndPassword,
-  // signOut,
-  // createUserWithEmailAndPassword,
-  // UserCredential,
-  // signInAnonymously,
-  User,
-} from 'firebase/auth';
-
-// import { firebaseAuth } from '../../src/utils/firebase/firebase';
+import { User } from 'firebase/auth';
 
 import Lobby from '../../src/components/Lobby';
 import { LobbyContext } from '../../src/contexts/LobbyContext';
 import { PokerGame } from '../../src/utils/poker/poker';
-
-// const username = faker.internet.userName();
-// const password = faker.internet.password();
-// let aliceAuth: UserCredential;
-
-// beforeAll(async () => {
-//   // aliceAuth = await createUserWithEmailAndPassword(firebaseAuth, username, password);
-//   aliceAuth = await signInAnonymously(firebaseAuth);
-// });
-
-// beforeEach(async () => {
-//   // aliceAuth = await signInWithEmailAndPassword(firebaseAuth, username, password);
-//   aliceAuth = await signInAnonymously(firebaseAuth);
-// });
-
-// afterEach(async () => {
-//   signOut(firebaseAuth);
-// });
 
 const mockData: PokerGame[] = [
   {
@@ -94,7 +60,6 @@ describe('Lobby tests', () => {
 
     const lobbyHeader = screen.getByTestId('lobby-header');
 
-    // expect(aliceAuth).not.toBe(null);
     expect(lobbyHeader).not.toBe(null);
     expect(lobbyHeader.children).toHaveLength(4);
   });
@@ -128,7 +93,6 @@ describe('Lobby tests', () => {
     const lobbyGameCreator = screen.getAllByTestId('lobby-game-creator')[0];
     const lobbyGamePlayers = screen.getAllByTestId('lobby-game-players')[0];
 
-    // expect(aliceAuth).not.toBe(null);
     expect(lobbyHeader).not.toBe(null);
     expect(lobbyGames).toHaveLength(mockData.length);
     expect(lobbyGameName.textContent).toEqual(mockData[0].gameName);
