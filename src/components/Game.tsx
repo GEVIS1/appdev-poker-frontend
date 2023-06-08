@@ -7,7 +7,7 @@ import LobbyProvider from '../contexts/LobbyContext';
 function Game() {
   const { user } = useContext(AuthContext);
   return (
-    <div id="game" className="flex justify-center pt-6 h-gamearea">
+    <div id="game" className="flex justify-center p-6 h-gamearea">
       <LobbyProvider>
         <Lobby user={user} />
       </LobbyProvider>
