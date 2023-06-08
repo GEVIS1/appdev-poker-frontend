@@ -9,7 +9,7 @@ function JoinGameButton({ open, gameId }: JoinGameProps) {
   return (
     <button
       type="button"
-      className={`w-20 rounded-sm ${open ? openColor : closedColor}`}
+      className={`w-20 h-7 rounded-sm ${open ? openColor : closedColor}`}
       data-testid="join-game-button"
       onClick={() => {
         // TODO: Join game logic here
