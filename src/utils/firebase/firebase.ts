@@ -2,6 +2,7 @@
 import { initializeApp } from 'firebase/app';
 import { connectAuthEmulator, getAuth } from 'firebase/auth';
 import {
+  collection,
   connectFirestoreEmulator,
   initializeFirestore,
   persistentLocalCache,
@@ -11,10 +12,10 @@ import {
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
-import firebaseConfig from '../../firebaseConfig.json';
+import firebaseConfig from '../../../firebaseConfig.json';
 
 // Firebase emulator config
-import emulatorConfig from '../../firebase.json';
+import emulatorConfig from '../../../firebase.json';
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -28,6 +29,8 @@ const firestore = initializeFirestore(app, {
     ? persistentLocalCache({ tabManager: persistentMultipleTabManager() })
     : undefined,
 });
+
+const gamesReference = collection(firestore, 'games');
 
 // Connect to the Firebase emulator if running locally
 if (import.meta.env.DEV) {
@@ -44,4 +47,4 @@ if (import.meta.env.DEV) {
 }
 
 export default app;
-export { firebaseAuth };
+export { firebaseAuth, firestore, gamesReference };

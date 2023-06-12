@@ -14,6 +14,10 @@
       "enabled": true,
       "port": 7071
     },
+    "hub": {
+      "port": 4400,
+      "host": "localhost"
+    },
     "singleProjectMode": true
   }
 }

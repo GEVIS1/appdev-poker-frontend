@@ -17,3 +17,30 @@ html, body, #root, #root>div {
 .spinner {
     animation: spin 2s linear infinite;
 }
+
+.h-gamearea {
+  /* 
+    The height of the game area. Basically the height of the screen minus the navbar height.
+    There should be a better way to do this..
+   */
+  --navbar-height: 3.5rem;
+  @apply h-[calc(100vh-var(--navbar-height))]
+}
+
+/*
+ * Custom no-scrollbar class for tailwind
+ * https://stackoverflow.com/a/70282887
+ * https://github.com/tailwindlabs/tailwindcss/discussions/2394
+ * https://github.com/tailwindlabs/tailwindcss/pull/5732
+ */
+@layer utilities {
+  /* Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+}

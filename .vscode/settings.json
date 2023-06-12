@@ -1,8 +1,10 @@
 {
-    "files.eol": "\n",
+    "files.eol": "\r\n",
     "cSpell.words": [
         "firestore",
         "tailwindcss"
     ],
-    "terminal.integrated.defaultProfile.windows": "Git Bash"
+    "terminal.integrated.defaultProfile.windows": "Git Bash",
+    "prettier.endOfLine": "auto",
+    "editor.tabSize": 2
 }
