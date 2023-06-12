@@ -43,9 +43,6 @@ export default function LobbyProvider({ children }: LobbyProviderProps) {
     setWaitingForLobbyData(true);
 
     try {
-      if (!user) {
-        throw Error('User is not logged in.');
-      }
       const gameDataCollectionRef = collection(firestore, 'games');
 
       if (!gameDataCollectionRef) {

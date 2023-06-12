@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { User } from 'firebase/auth';
 
 import { LobbyContext } from '../contexts/LobbyContext';
@@ -13,6 +13,25 @@ interface LobbyProps {
 function Lobby({ user }: LobbyProps) {
   const { gameData } = useContext(LobbyContext);
 
+  const [gridLayout, setGridLayout] = useState({
+    header: 'grid-cols-2 grid-rows-2 md:grid-cols-4 md:grid-rows-1',
+    item: 'grid-cols-2 md:grid-cols-4',
+  });
+
+  useEffect(() => {
+    if (!user) {
+      setGridLayout({
+        header: 'grid-cols-2 grid-rows-2 md:grid-cols-3 md:grid-rows-1',
+        item: 'grid-cols-2 md:grid-cols-3',
+      });
+    } else {
+      setGridLayout({
+        header: 'grid-cols-2 grid-rows-2 md:grid-cols-4 md:grid-rows-1',
+        item: 'grid-cols-2 md:grid-cols-4',
+      });
+    }
+  }, [user]);
+
   return (
     <div
       id="lobby"
@@ -20,7 +39,7 @@ function Lobby({ user }: LobbyProps) {
       className="flex flex-col border-2 border-green-900 rounded-lg p-4 gap-1 w-full"
     >
       <div
-        className="grid gap-2 grid-cols-2 grid-rows-2 md:grid-cols-4 md:grid-rows-1 p-2 bg-green-600 rounded-sm"
+        className={`grid gap-2 ${gridLayout.header} p-2 bg-green-600 rounded-sm`}
         data-testid="lobby-header"
       >
         <span>Roomname: </span>
@@ -38,7 +57,7 @@ function Lobby({ user }: LobbyProps) {
           gameName, gameId, creator, players, open,
         }) => (
           <div
-            className="grid gap-2 grid-cols-2 md:grid-cols-4 p-2 bg-green-700 rounded-md transition-all"
+            className={`grid gap-2 ${gridLayout.item} p-2 bg-green-700 rounded-md transition-all`}
             key={gameId}
             data-testid="lobby-game"
           >
