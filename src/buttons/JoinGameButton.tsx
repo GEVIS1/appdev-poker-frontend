@@ -1,9 +1,13 @@
+import { useContext } from 'react';
+import { GameContext } from '../contexts/GameContext/GameContext';
+
 interface JoinGameProps {
   open?: boolean;
   gameId: string;
 }
 
 function JoinGameButton({ open, gameId }: JoinGameProps) {
+  const { joinGame, setCurrentGame, setInGame } = useContext(GameContext);
   const openColor = 'bg-green-600';
   const closedColor = 'bg-red-600';
   return (
@@ -14,7 +18,7 @@ function JoinGameButton({ open, gameId }: JoinGameProps) {
       onClick={() => {
         // TODO: Join game logic here
         if (open) {
-          window.history.pushState('game', 'PokerGame', `/game/${gameId}`);
+          joinGame(`/game/${gameId}`, setCurrentGame, setInGame);
         } else {
           alert('Game is full!');
         }
