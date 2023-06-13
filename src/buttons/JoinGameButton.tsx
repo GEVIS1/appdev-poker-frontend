@@ -18,9 +18,8 @@ function JoinGameButton({ open, gameId }: JoinGameProps) {
       onClick={() => {
         // TODO: Join game logic here
         if (open) {
-          joinGame(`/games/${gameId}`);
+          joinGame(gameId);
         } else {
-          
           alert('Game is full!'); // eslint-disable-line no-alert
         }
       }}
