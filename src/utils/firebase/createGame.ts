@@ -19,10 +19,14 @@ async function createGame(user: User) {
       gameName: inputGameName,
       open: true,
       players: [name],
+      playerUids: [user.uid],
       creator: name,
       currentTurn: 0,
       createdAt: serverTimestamp(),
     } as PokerGame & { createdAt: FieldValue });
+
+    // TODO: Automatically join game after successful creation
+    
   } catch (e) {
     if (e instanceof Error && e.message === ErrorType.BadName) {
       // eslint-disable-next-line no-alert

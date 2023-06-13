@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { GameContext } from '../contexts/GameContext/GameContext';
+import { GameContext } from '../contexts/GameContext';
 
 interface JoinGameProps {
   open?: boolean;
@@ -7,7 +7,7 @@ interface JoinGameProps {
 }
 
 function JoinGameButton({ open, gameId }: JoinGameProps) {
-  const { joinGame, setCurrentGame, setInGame } = useContext(GameContext);
+  const { joinGame } = useContext(GameContext);
   const openColor = 'bg-green-600';
   const closedColor = 'bg-red-600';
   return (
@@ -18,9 +18,10 @@ function JoinGameButton({ open, gameId }: JoinGameProps) {
       onClick={() => {
         // TODO: Join game logic here
         if (open) {
-          joinGame(`/game/${gameId}`, setCurrentGame, setInGame);
+          joinGame(`/games/${gameId}`);
         } else {
-          alert('Game is full!');
+          
+          alert('Game is full!'); // eslint-disable-line no-alert
         }
       }}
     >

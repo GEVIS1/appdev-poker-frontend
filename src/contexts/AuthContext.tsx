@@ -9,16 +9,21 @@ import {
   signOut,
 } from 'firebase/auth';
 import {
+  onSnapshot,
+  doc,
+} from 'firebase/firestore';
+import {
   ReactElement,
   createContext,
   useEffect,
   useMemo,
   useState,
 } from 'react';
-import { firebaseAuth } from '../utils/firebase/firebase';
+import { firebaseAuth, firestore } from '../utils/firebase/firebase';
 
 export interface AuthContextData {
   user: User | null;
+  userData: object;
   logOutUser: (() => Promise<void>) | null;
   anonymousSignIn: (() => Promise<UserCredential | Error>) | null;
   googleSignIn: (() => Promise<UserCredential | Error>) | null;
@@ -29,6 +34,7 @@ export interface AuthContextData {
 
 export const AuthContext = createContext<AuthContextData>({
   user: null,
+  userData: {},
   logOutUser: null,
   waitingForAuth: true,
   processingLogin: false,
@@ -43,6 +49,7 @@ interface Props {
 
 export function AuthProvider({ children }: Props) {
   const [user, setUser] = useState<User | null>(null);
+  const [userData, setUserData] = useState<null | {}>(null);
   const [waitingForAuth, setWaitingForAuth] = useState(true);
   const [processingLogin, setProcessingLogin] = useState(false);
 
@@ -53,6 +60,7 @@ export function AuthProvider({ children }: Props) {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(firebaseAuth, (userUpdate) => {
       try {
+        // TODO: Add user document if it does not exist
         setProcessingLogin(true);
         if (userUpdate) setUser(userUpdate);
         else setUser(null);
@@ -70,6 +78,20 @@ export function AuthProvider({ children }: Props) {
       setWaitingForAuth(true);
     };
   }, []);
+
+  useEffect(() => {
+    if (user) {
+        const unsubscribe = onSnapshot(doc(firestore, 'users', user.uid), (userDoc) => {
+          try {
+            setUserData(userDoc.data());
+          } catch (e) {
+            setUserData(null);
+            console.log('Caught error in user data snapshot: ', e)
+          }
+        })
+        return unsubscribe;
+      }
+  }, [user])
 
   const logOutUser = async () => {
     try {
@@ -122,6 +144,7 @@ export function AuthProvider({ children }: Props) {
   const value = useMemo(
     () => ({
       user,
+      userData,
       logOutUser,
       anonymousSignIn,
       googleSignIn,
@@ -129,7 +152,7 @@ export function AuthProvider({ children }: Props) {
       firebaseAuth,
       processingLogin,
     }),
-    [user, waitingForAuth, processingLogin],
+    [user, userData, waitingForAuth, processingLogin],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

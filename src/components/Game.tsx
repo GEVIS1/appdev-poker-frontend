@@ -3,23 +3,24 @@ import { AuthContext } from '../contexts/AuthContext';
 
 import Lobby from './Lobby';
 import LobbyProvider from '../contexts/LobbyContext';
-import GameProvider, { GameContext } from '../contexts/GameContext/GameContext';
+import { GameContext } from '../contexts/GameContext';
 
 function Game() {
   const { user } = useContext(AuthContext);
-  const { inGame } = useContext(GameContext);
+  const { inGame, currentGame, leaveGame } = useContext(GameContext);
 
+  if (inGame)
+    return (
+        <div id="game" className="flex justify-center p-6 h-gamearea">
+          <div>You are in a game.</div>
+          <button type="button" onClick={() => leaveGame(currentGame)}> Leave Game </button>
+        </div>
+    );
   return (
     <div id="game" className="flex justify-center p-6 h-gamearea">
-      <GameProvider>
-        {inGame ? (
-          <div>You are in a game.</div>
-        ) : (
-          <LobbyProvider>
-            <Lobby user={user} />
-          </LobbyProvider>
-        )}
-      </GameProvider>
+        <LobbyProvider>
+          <Lobby user={user} />
+        </LobbyProvider>
     </div>
   );
 }

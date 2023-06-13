@@ -11,6 +11,8 @@ class PokerGame {
 
   players: Array<string>;
 
+  playerUids: Array<string>;
+
   open: boolean;
 
   currentTurn: number;
@@ -21,6 +23,7 @@ class PokerGame {
     gameName: string,
     creator: string,
     players: Array<string>,
+    playerUids: Array<string>,
     gameId: string,
     open = true,
     currentTurn = 0,
@@ -28,6 +31,7 @@ class PokerGame {
     this.gameName = gameName;
     this.creator = creator;
     this.players = players;
+    this.playerUids = playerUids;
     this.gameId = gameId;
     this.open = open;
     this.currentTurn = currentTurn;
@@ -40,6 +44,7 @@ const pokerGameConverter = {
       gameName: pokerGame.gameName,
       creator: pokerGame.creator,
       players: pokerGame.players,
+      playerUids: pokerGame.playerUids,
       open: pokerGame.open,
       currentTurn: pokerGame.currentTurn,
     };
@@ -53,6 +58,7 @@ const pokerGameConverter = {
       data.gameName,
       data.creator,
       data.players,
+      data.playerUids,
       snapshot.id,
       data.open,
       data.currentTurn,
