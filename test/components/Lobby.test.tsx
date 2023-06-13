@@ -5,37 +5,47 @@ import { User } from 'firebase/auth';
 
 import Lobby from '../../src/components/Lobby';
 import { LobbyContext } from '../../src/contexts/LobbyContext';
-import { PokerGame } from '../../src/utils/poker/poker';
+import { Player, PokerGame } from '../../src/utils/poker/poker';
+
+const creators: Player[] = Array.from({ length: 10 }, () => ({
+  name: faker.person.firstName(),
+  uid: faker.string.alphanumeric(10),
+}));
+
+const players: Player[] = Array.from({ length: 8 }, () => ({
+  name: faker.person.firstName(),
+  uid: faker.string.alphanumeric(10),
+}));
 
 const mockData: PokerGame[] = [
   {
     gameName: 'Poker Game',
-    creator: 'Cassius Marcellus Coolidge',
-    players: ['Dog', 'Dog', 'Dog', 'Dog'],
+    creator: creators[0],
+    players: [creators[0], ...players.slice(0, 4)],
     open: false,
     gameId: '1234',
     currentTurn: 6,
   },
   {
     gameName: 'The coolest game in the world',
-    creator: 'Mr. Freeze',
-    players: ['Mr. Freeze', 'Batman', 'Robin'],
+    creator: creators[1],
+    players: [creators[1], ...players.slice(4, 6)],
     open: true,
     gameId: '5678',
     currentTurn: 0,
   },
   {
     gameName: 'Mushroom kingdom',
-    creator: 'Bowser',
-    players: ['Bowser', 'Luigi', 'Mario', 'Princess Peach'],
+    creator: creators[2],
+    players: [creators[2], ...players.slice(6, 9)],
     open: false,
     gameId: '9098',
     currentTurn: 1,
   },
   {
     gameName: 'GRDJG$($#JKL#$%$(FDG$dwad2ad2ad2a',
-    creator: 'Missingno',
-    players: [],
+    creator: creators[3],
+    players: [creators[3]],
     open: true,
     gameId: '7654',
     currentTurn: 0,
@@ -96,9 +106,9 @@ describe('Lobby tests', () => {
     expect(lobbyHeader).not.toBe(null);
     expect(lobbyGames).toHaveLength(mockData.length);
     expect(lobbyGameName.textContent).toEqual(mockData[0].gameName);
-    expect(lobbyGameCreator.textContent).toEqual(mockData[0].creator);
+    expect(lobbyGameCreator.textContent).toEqual(mockData[0].creator.name);
     expect(lobbyGamePlayers.textContent).toEqual(
-      mockData[0].players.join(', '),
+      mockData[0].players.map((player: Player) => player.name).join(', '),
     );
     expect(lobbyGames[0].children[3].children[0]).toBeInstanceOf(
       HTMLButtonElement,
