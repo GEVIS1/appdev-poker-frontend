@@ -1,20 +1,15 @@
-import {
-  User
-} from 'firebase/auth';
-import {
-  updateDoc,
-  getDoc,
-  doc,
-} from 'firebase/firestore';
+import { User } from 'firebase/auth';
+import { updateDoc, doc } from 'firebase/firestore';
 import { firestore } from './firebase';
+import getGameData from './getGameData';
+import { Player } from '../poker/poker';
 
 async function addUserToGame(user: User, gameId: string) {
   try {
-    const gameDocRef = doc(firestore, gameId);
-    const gameDocument = (await getDoc(gameDocRef)).data()
+    const [gameDocument, gameDocRef] = await getGameData(gameId);
 
     if (!gameDocument) {
-      throw new Error('Can not find game.')
+      throw new Error('Can not find game.');
     }
 
     if (!gameDocument.open) {
@@ -25,26 +20,29 @@ async function addUserToGame(user: User, gameId: string) {
       throw new Error('Can not join full game.');
     }
 
-    if (gameDocument.playerUids.filter(uid => uid === user.uid).length > 0) {
+    if (
+      gameDocument.players
+        .map((player: Player) => player.uid)
+        .includes(user.uid)
+    ) {
       throw new Error('Already in this game.');
     }
 
-    gameDocument.playerUids.push(user.uid);
+    const newPlayer: Player = {
+      name: user.displayName ?? 'Anonymous',
+      uid: user.uid,
+    };
 
-    const name = user.isAnonymous ? 'Anonymous' : user.displayName
-
-    gameDocument.players.push(name);
+    gameDocument.players.push(newPlayer);
 
     await updateDoc(gameDocRef, {
       players: gameDocument.players,
-      playerUids: gameDocument.playerUids,
     });
 
     await updateDoc(doc(firestore, 'users', user.uid), {
       inGame: true,
-      gameId
+      gameId,
     });
-
   } catch (e) {
     console.error('Could not add user to game: ', e);
   }

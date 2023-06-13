@@ -1,59 +1,69 @@
-import {
-  User
-} from 'firebase/auth';
-import {
-  updateDoc,
-  getDoc,
-  doc,
-} from 'firebase/firestore';
+import { User } from 'firebase/auth';
+import { setDoc, doc, deleteDoc } from 'firebase/firestore';
 import { firestore } from './firebase';
+import getGameData from './getGameData';
+import { Player } from '../poker/poker';
 
 async function removeUserFromGame(user: User, gameId: string) {
   try {
-    const gameDocRef = doc(firestore, gameId);
-    const gameDocument = (await getDoc(gameDocRef)).data()
+    const [gameDocument, gameDocRef] = await getGameData(gameId);
 
     if (!gameDocument) {
-      throw new Error('Can not find game.')
+      throw new Error('Can not find game.');
     }
 
     if (!gameDocument.open) {
       throw new Error('Can not leave closed game.');
     }
-    
-    if (gameDocument.playerUids.filter(uid => uid === user.uid).length < 1) {
+
+    if (
+      !gameDocument.players
+        .map((player: Player) => player.uid)
+        .includes(user.uid)
+    ) {
       throw new Error('Not in this game.');
     }
 
-    gameDocument.playerUids = gameDocument.playerUids.filter(uid => uid !== user.uid);
+    const playerIndex = gameDocument.players.findIndex(
+      (player: Player) => player.uid === user.uid,
+    );
 
-    const name = user.isAnonymous ? 'Anonymous' : user.displayName
-
-    if (name === 'Anonymous') {
-      let removed = false;
-
-      // Filter out first instance of anonymous
-      gameDocument.players = gameDocument.players.filter(playerName => {
-        if (!removed && playerName === 'Anonymous') {
-          removed = true;
-          return false;
-        }
-        return true;
-      })
-    } else {
-      gameDocument.players = gameDocument.players.filter(playerName => playerName !== name);
+    if (playerIndex === -1) {
+      throw new Error('Player not found in game.');
     }
 
-    await updateDoc(gameDocRef, {
-      players: gameDocument.players,
-      playerUids: gameDocument.playerUids,
-    });
+    if (gameDocument.players.length > 1) {
+      // Give someone else ownership if owner leaves
+      if (gameDocument.creator.uid === user.uid) {
+        const newOwner = Math.floor(Math.random() * (gameDocument.players.length - 1)) + 1;
+        gameDocument.creator = gameDocument.players[newOwner];
+        gameDocument.players[0] = gameDocument.players[newOwner];
+      }
 
-    await updateDoc(doc(firestore, 'users', user.uid), {
-      inGame: false,
-      gameId: null,
-    });
+      // Remove player from game
+      gameDocument.players.splice(playerIndex, 1);
 
+      await setDoc(
+        gameDocRef,
+        {
+          creator: gameDocument.creator,
+          players: gameDocument.players,
+        },
+        { merge: true },
+      );
+    } else {
+      // Delete game if last player leaves
+      deleteDoc(gameDocRef);
+    }
+
+    await setDoc(
+      doc(firestore, 'users', user.uid),
+      {
+        inGame: false,
+        gameId: null,
+      },
+      { merge: true },
+    );
   } catch (e) {
     console.error('Could not remove user from game: ', e);
   }

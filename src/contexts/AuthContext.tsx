@@ -9,8 +9,7 @@ import {
   signOut,
 } from 'firebase/auth';
 import {
-  onSnapshot,
-  doc,
+  onSnapshot, doc, DocumentData, setDoc,
 } from 'firebase/firestore';
 import {
   ReactElement,
@@ -23,7 +22,7 @@ import { firebaseAuth, firestore } from '../utils/firebase/firebase';
 
 export interface AuthContextData {
   user: User | null;
-  userData: object;
+  userData: DocumentData;
   logOutUser: (() => Promise<void>) | null;
   anonymousSignIn: (() => Promise<UserCredential | Error>) | null;
   googleSignIn: (() => Promise<UserCredential | Error>) | null;
@@ -49,7 +48,7 @@ interface Props {
 
 export function AuthProvider({ children }: Props) {
   const [user, setUser] = useState<User | null>(null);
-  const [userData, setUserData] = useState<null | {}>(null);
+  const [userData, setUserData] = useState<null | DocumentData>(null);
   const [waitingForAuth, setWaitingForAuth] = useState(true);
   const [processingLogin, setProcessingLogin] = useState(false);
 
@@ -60,7 +59,6 @@ export function AuthProvider({ children }: Props) {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(firebaseAuth, (userUpdate) => {
       try {
-        // TODO: Add user document if it does not exist
         setProcessingLogin(true);
         if (userUpdate) setUser(userUpdate);
         else setUser(null);
@@ -81,17 +79,31 @@ export function AuthProvider({ children }: Props) {
 
   useEffect(() => {
     if (user) {
-        const unsubscribe = onSnapshot(doc(firestore, 'users', user.uid), (userDoc) => {
+      const unsubscribe = onSnapshot(
+        doc(firestore, 'users', user.uid),
+        (userDoc) => {
           try {
-            setUserData(userDoc.data());
+            if (userDoc.exists()) {
+              setUserData(userDoc.data());
+            } else {
+              const newData = {
+                inGame: false,
+                gameId: null,
+              };
+              setDoc(userDoc.ref, newData).then(() => {
+                setUserData(newData);
+              });
+            }
           } catch (e) {
             setUserData(null);
-            console.log('Caught error in user data snapshot: ', e)
+            console.log('Caught error in user data snapshot: ', e);
           }
-        })
-        return unsubscribe;
-      }
-  }, [user])
+        },
+      );
+      return unsubscribe;
+    }
+    return () => {};
+  }, [user]);
 
   const logOutUser = async () => {
     try {
@@ -116,7 +128,7 @@ export function AuthProvider({ children }: Props) {
         return e as Error;
       }
       return new Error(
-        'Unknown error occurred when handling anonymous signin.',
+        'Unknown error occurred when handling anonymous sign in.',
       );
     } finally {
       setProcessingLogin(false);
@@ -131,7 +143,7 @@ export function AuthProvider({ children }: Props) {
       if (typeof e === typeof Error) {
         return e as Error;
       }
-      return new Error('Unknown error occurred when handling Google signin.');
+      return new Error('Unknown error occurred when handling Google sign in.');
     } finally {
       setProcessingLogin(false);
     }

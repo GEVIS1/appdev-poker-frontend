@@ -7,6 +7,7 @@ import {
   useState,
   useContext,
   useEffect,
+  useCallback,
 } from 'react';
 import addUserToGame from '../utils/firebase/addUserToGame';
 import removeUserFromGame from '../utils/firebase/removeUserFromGame';
@@ -17,11 +18,7 @@ export interface GameContextData {
   setInGame: Dispatch<SetStateAction<boolean>>;
   setCurrentGame: Dispatch<SetStateAction<string | null>>;
   currentGame: null | string;
-  joinGame: (
-    gameId: string,
-    setCurrentGame: Dispatch<SetStateAction<string | null>>,
-    setInGame: Dispatch<SetStateAction<boolean>>
-  ) => void;
+  joinGame: (gameId: string) => void;
   leaveGame: (gameId: string) => void;
 }
 
@@ -44,36 +41,58 @@ export default function GameProvider({ children }: GameProviderProps) {
 
   const { user, userData } = useContext(AuthContext);
 
-  const joinGame = (gameId: string) => {
-    if (!user) {
-      throw Error('Unauthenticated users can not join games.');
+  useEffect(() => {
+    if (userData) {
+      setInGame(userData.inGame);
+      setCurrentGame(userData.gameId);
+
+      if (window.location.pathname !== userData.gameId) {
+        window.history.pushState({}, '', userData.gameId);
+      }
     }
+    // if (userData && userData.inGame && window.location.pathname !== userData.gameId) {
+    //   console.log('Pushing gameid to history');
+    //   window.history.pushState({}, '', userData.gameId);
+    // } else {
+    //   console.log('Pushing / to history');
+    //   window.history.pushState({}, '', '/');
+    // }
+  }, [userData]);
 
-    // TODO: Ascertain canJoin boolean
-    const canJoin = true;
+  const joinGame = useCallback(
+    (gameId: string) => {
+      if (!user) {
+        throw Error('Unauthenticated users can not join games.');
+      }
+      const canJoin = true;
 
-    if (canJoin) {
-      setCurrentGame(gameId);
-      setInGame(true);
-      addUserToGame(user, gameId);
-      console.log('Joined game', gameId);
-      window.history.pushState({}, '', gameId);
-    } else {
-      throw new Error(`Could not join game ${gameId}`);
-    }
-  };
+      if (canJoin) {
+        setCurrentGame(gameId);
+        setInGame(true);
+        addUserToGame(user, gameId);
+        console.log('Joined game', gameId);
+        window.history.pushState({}, '', gameId);
+      } else {
+        throw new Error(`Could not join game ${gameId}`);
+      }
+    },
+    [user, setInGame, setCurrentGame],
+  );
 
-  const leaveGame = (gameId: string) => {
-    if (!user) {
-      throw Error('Unauthenticated users can not leave games.');
-    }
+  const leaveGame = useCallback(
+    (gameId: string) => {
+      if (!user) {
+        throw Error('Unauthenticated users can not leave games.');
+      }
 
-    setInGame(false);
-    setCurrentGame(null);
-    removeUserFromGame(user, gameId);
-    console.log('Left game: ', gameId);
-    window.history.pushState({}, '', '/');
-  };
+      setInGame(false);
+      setCurrentGame(null);
+      removeUserFromGame(user, gameId);
+      console.log('Left game: ', gameId);
+      window.history.pushState({}, '', '/');
+    },
+    [user, setInGame, setCurrentGame],
+  );
 
   /*
    * Wrap the value in useMemo to prevent unnecessary re-renders.
@@ -88,7 +107,7 @@ export default function GameProvider({ children }: GameProviderProps) {
       joinGame,
       leaveGame,
     }),
-    [inGame, setInGame, currentGame, setCurrentGame]
+    [inGame, setInGame, currentGame, setCurrentGame, joinGame, leaveGame],
   );
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;
