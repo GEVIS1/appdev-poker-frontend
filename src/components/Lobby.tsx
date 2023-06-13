@@ -71,13 +71,13 @@ function Lobby({ user }: LobbyProps) {
               data-testid="lobby-game-creator"
               className="overflow-ellipsis overflow-hidden"
             >
-              {creator}
+              {creator.name}
             </span>
             <span
               data-testid="lobby-game-players"
               className="overflow-ellipsis overflow-hidden"
             >
-              {players.join(', ')}
+              {players.map((player) => player.name).join(', ')}
             </span>
             <div className="ml-auto mr-auto flex justify-center items-end">
               {user ? <JoinGameButton open={open} gameId={gameId} /> : null}

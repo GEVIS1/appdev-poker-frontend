@@ -11,7 +11,7 @@ export interface Player {
 class PokerGame {
   gameName: string;
 
-  creator: string;
+  creator: Player;
 
   players: Array<Player>;
 
@@ -23,7 +23,7 @@ class PokerGame {
 
   constructor(
     gameName: string,
-    creator: string,
+    creator: Player,
     players: Array<Player>,
     gameId: string,
     open = true,
