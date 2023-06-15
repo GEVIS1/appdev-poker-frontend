@@ -14,11 +14,7 @@ import { firestore } from './firebase';
 import ErrorType from '../errors';
 import { Player, PokerGame } from '../poker/poker';
 
-async function createGame(
-  user: User,
-  setCurrentGame: Dispatch<SetStateAction<string | null>>,
-  setInGame: Dispatch<SetStateAction<boolean>>,
-) {
+async function createGame(user: User): Promise<[string | null, boolean]> {
   try {
     const gamesReference = collection(firestore, 'games');
 
@@ -35,14 +31,16 @@ async function createGame(
       uid: user.uid,
     };
 
-    const newGameRef = await addDoc(gamesReference, {
+    const documentData = {
       gameName: inputGameName,
       open: true,
       players: [creator],
       creator,
       currentTurn: 0,
       createdAt: serverTimestamp(),
-    } as PokerGame & { createdAt: FieldValue });
+    } as PokerGame & { createdAt: FieldValue };
+
+    const newGameRef = await addDoc(gamesReference, documentData);
 
     const newGameDoc = await getDoc(newGameRef);
 
@@ -51,18 +49,12 @@ async function createGame(
       gameId: newGameDoc.id,
     });
 
-    setCurrentGame(newGameDoc.id);
-    setInGame(true);
+    return [newGameDoc.id, true];
   } catch (e) {
     if (e instanceof Error && e.message === ErrorType.BadName) {
       // eslint-disable-next-line no-alert
       alert(ErrorType.BadName);
-      throw e;
     }
-    // TODO: Notify user in UI
-    // eslint-disable-next-line no-console
-    setCurrentGame(null);
-    setInGame(false);
     throw e;
   }
 }
