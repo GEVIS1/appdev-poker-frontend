@@ -4,39 +4,11 @@ import {
   SnapshotOptions,
 } from 'firebase/firestore';
 
+import { Hand } from '../poker/game';
+
 export interface Player {
   name: string;
   uid: string;
-}
-
-export enum Suit {
-  Spade = 'SPADE',
-  Club = 'CLUB',
-  Heart = 'HEART',
-  Diamond = 'DIAMOND',
-}
-export enum Rank {
-  TWO = 2,
-  THREE = 3,
-  FOUR = 4,
-  FIVE = 5,
-  SIX = 6,
-  SEVEN = 7,
-  EIGHT = 8,
-  NINE = 9,
-  TEN = 10,
-  JACK = 11,
-  QUEEN = 12,
-  KING = 13,
-  ACE = 14,
-}
-
-export interface Card {
-  suit: Suit;
-  rank: Rank;
-}
-export interface Hand {
-  cards: [Card, Card, Card, Card, Card];
 }
 
 class PokerGame {
