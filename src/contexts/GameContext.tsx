@@ -9,15 +9,18 @@ import {
   useEffect,
   useCallback,
 } from 'react';
+import { DocumentData, doc, onSnapshot } from 'firebase/firestore';
 import addUserToGame from '../utils/firebase/addUserToGame';
 import removeUserFromGame from '../utils/firebase/removeUserFromGame';
 import { AuthContext } from './AuthContext';
+import { firestore } from '../utils/firebase/firebase';
 
 export interface GameContextData {
   inGame: boolean;
   setInGame: Dispatch<SetStateAction<boolean>>;
   setCurrentGame: Dispatch<SetStateAction<string | null>>;
   currentGame: null | string;
+  gameData: null | DocumentData;
   joinGame: (gameId: string) => void;
   leaveGame: (gameId: string) => void;
 }
@@ -27,6 +30,7 @@ export const GameContext = createContext<GameContextData>({
   setInGame: () => {},
   setCurrentGame: () => {},
   currentGame: null,
+  gameData: null,
   joinGame: () => {},
   leaveGame: () => {},
 });
@@ -38,9 +42,11 @@ interface GameProviderProps {
 export default function GameProvider({ children }: GameProviderProps) {
   const [inGame, setInGame] = useState(false);
   const [currentGame, setCurrentGame] = useState<null | string>(null);
+  const [gameData, setGameData] = useState<null | DocumentData>(null);
 
   const { user, userData } = useContext(AuthContext);
 
+  // Set the state from the userData and move to the game page if necessary
   useEffect(() => {
     if (userData) {
       setInGame(userData.inGame);
@@ -50,14 +56,22 @@ export default function GameProvider({ children }: GameProviderProps) {
         window.history.pushState({}, '', userData.gameId);
       }
     }
-    // if (userData && userData.inGame && window.location.pathname !== userData.gameId) {
-    //   console.log('Pushing gameid to history');
-    //   window.history.pushState({}, '', userData.gameId);
-    // } else {
-    //   console.log('Pushing / to history');
-    //   window.history.pushState({}, '', '/');
-    // }
   }, [userData]);
+
+  useEffect(() => {
+    if (currentGame) {
+      const unsubscribe = onSnapshot(
+        doc(firestore, 'games', currentGame),
+        (document) => {
+          if (document.exists()) {
+            setGameData(document.data());
+          }
+        },
+      );
+      return unsubscribe;
+    }
+    return () => {};
+  }, [inGame, currentGame]);
 
   const joinGame = useCallback(
     (gameId: string) => {
@@ -104,10 +118,19 @@ export default function GameProvider({ children }: GameProviderProps) {
       setInGame,
       currentGame,
       setCurrentGame,
+      gameData,
       joinGame,
       leaveGame,
     }),
-    [inGame, setInGame, currentGame, setCurrentGame, joinGame, leaveGame],
+    [
+      inGame,
+      setInGame,
+      currentGame,
+      setCurrentGame,
+      gameData,
+      joinGame,
+      leaveGame,
+    ],
   );
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;
