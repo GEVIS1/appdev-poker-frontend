@@ -11,7 +11,7 @@ import { User } from 'firebase/auth';
 
 import { firestore } from './firebase';
 import ErrorType from '../errors';
-import { Player, PokerGame } from '../poker/poker';
+import { Player, PokerGame } from './poker';
 
 async function createGame(user: User): Promise<[string | null, boolean]> {
   try {

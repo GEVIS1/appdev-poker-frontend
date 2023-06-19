@@ -3,7 +3,7 @@ import { DocumentData } from 'firebase/firestore';
 import { GameContext } from '../contexts/GameContext';
 import LeaveGameButton from '../buttons/LeaveGameButton';
 import { AuthContext } from '../contexts/AuthContext';
-import { Player } from '../utils/poker/poker';
+import { Player } from '../utils/firebase/poker';
 import startGame from '../utils/firebase/startGame';
 
 function Poker() {

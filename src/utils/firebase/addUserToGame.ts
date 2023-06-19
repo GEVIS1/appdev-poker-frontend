@@ -2,7 +2,7 @@ import { User } from 'firebase/auth';
 import { updateDoc, doc } from 'firebase/firestore';
 import { firestore } from './firebase';
 import getGameData from './getGameData';
-import { Player } from '../poker/poker';
+import { Player } from './poker';
 
 async function addUserToGame(user: User, gameId: string) {
   try {

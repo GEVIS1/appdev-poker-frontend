@@ -16,7 +16,7 @@ import {
 
 import { firestore } from '../utils/firebase/firebase';
 import { AuthContext } from './AuthContext';
-import { PokerGame, pokerGameConverter } from '../utils/poker/poker';
+import { PokerGame, pokerGameConverter } from '../utils/firebase/poker';
 
 export interface LobbyContextData {
   gameData: PokerGame[];

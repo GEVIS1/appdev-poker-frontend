@@ -2,7 +2,7 @@ import { User } from 'firebase/auth';
 import { setDoc, doc, deleteDoc } from 'firebase/firestore';
 import { firestore } from './firebase';
 import getGameData from './getGameData';
-import { Player } from '../poker/poker';
+import { Player } from './poker';
 
 async function removeUserFromGame(user: User, gameId: string) {
   try {
