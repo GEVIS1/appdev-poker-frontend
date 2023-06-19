@@ -23,5 +23,5 @@ module.exports = {
     'react/react-in-jsx-scope': 'off',
     'linebreak-style': 'off',
   },
-  ignorePatterns: ['src/**/*.test.ts', '.eslintrc.cjs'],
+  ignorePatterns: ['test/**/*.test.ts', '.eslintrc.cjs'],
 };
