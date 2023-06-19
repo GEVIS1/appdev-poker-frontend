@@ -8,11 +8,25 @@ interface JoinGameProps {
   gameId: string;
 }
 
+function ButtonLabel(joinable: boolean, open: boolean) {
+  let text;
+  if (joinable) {
+    text = 'Join';
+  } else if (!open) {
+    text = 'Closed';
+  } else {
+    text = 'Full';
+  }
+  return <p>{text}</p>;
+}
+
 function JoinGameButton({ open, players, gameId }: JoinGameProps) {
-  const [joinable, setJoinable] = useState(open && players.length < 4);
+  const [joinable, setJoinable] = useState(
+    (open ?? false) && players.length < 4,
+  );
 
   useEffect(() => {
-    setJoinable(open && players.length < 4);
+    setJoinable((open ?? false) && players.length < 4);
   }, [open, players]);
 
   const { joinGame } = useContext(GameContext);
@@ -27,12 +41,14 @@ function JoinGameButton({ open, players, gameId }: JoinGameProps) {
         // TODO: Join game logic here
         if (joinable) {
           joinGame(gameId);
+        } else if (!open) {
+          alert('Game is not open!'); // eslint-disable-line no-alert
         } else {
           alert('Game is full!'); // eslint-disable-line no-alert
         }
       }}
     >
-      {joinable ? 'Join Game' : 'Full'}
+      {ButtonLabel(joinable, open ?? false)}
     </button>
   );
 }
