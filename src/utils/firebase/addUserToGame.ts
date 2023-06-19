@@ -16,7 +16,7 @@ async function addUserToGame(user: User, gameId: string) {
       throw new Error('Can not join closed game.');
     }
 
-    if (gameDocument.players.length > 4) {
+    if (gameDocument.players.length > 3) {
       throw new Error('Can not join full game.');
     }
 
