@@ -4,12 +4,16 @@ import {
   SnapshotOptions,
 } from 'firebase/firestore';
 
+export interface Player {
+  name: string;
+  uid: string;
+}
 class PokerGame {
   gameName: string;
 
-  creator: string;
+  creator: Player;
 
-  players: Array<string>;
+  players: Array<Player>;
 
   open: boolean;
 
@@ -19,8 +23,8 @@ class PokerGame {
 
   constructor(
     gameName: string,
-    creator: string,
-    players: Array<string>,
+    creator: Player,
+    players: Array<Player>,
     gameId: string,
     open = true,
     currentTurn = 0,

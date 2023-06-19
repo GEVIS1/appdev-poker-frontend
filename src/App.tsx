@@ -4,6 +4,7 @@ import { AuthContext } from './contexts/AuthContext';
 import NavBar from './components/NavBar';
 import Spinner from './components/Spinner';
 import Game from './components/Game';
+import GameProvider from './contexts/GameContext';
 
 function App() {
   const { waitingForAuth, processingLogin } = useContext(AuthContext);
@@ -12,7 +13,9 @@ function App() {
     <div id="app" className="bg-green-800 h-max">
       <NavBar />
       {!waitingForAuth && !processingLogin ? (
-        <Game />
+        <GameProvider>
+          <Game />
+        </GameProvider>
       ) : (
         <div className="flex justify-center items-center h-gamearea">
           <Spinner className="w-20" />
