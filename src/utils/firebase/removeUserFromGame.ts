@@ -12,8 +12,12 @@ async function removeUserFromGame(user: User, gameId: string) {
       throw new Error('Can not find game.');
     }
 
-    if (!gameDocument.open) {
-      throw new Error('Can not leave closed game.');
+    if (
+      !gameDocument.players
+        .map((player: Player) => player.uid)
+        .includes(user.uid)
+    ) {
+      throw new Error('Can not leave game you are not in.');
     }
 
     if (
