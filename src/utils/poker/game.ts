@@ -1,3 +1,5 @@
+import combinations from './combinations';
+
 export enum Suit {
   Spade = 'SPADE',
   Club = 'CLUB',
@@ -19,7 +21,6 @@ export enum Rank {
   KING = 13,
   ACE = 14,
 }
-
 export interface Card {
   suit: Suit;
   rank: Rank;
@@ -140,6 +141,14 @@ class Poker {
     this.discard.push(pickedCard);
 
     return pickedCard;
+  }
+
+
+  public static calculateScore(hand: Hand) {
+    const { cards } = hand;
+
+    // Sort the cards in ascending order
+    cards.sort((a, b) => a.rank - b.rank);
   }
 }
 
