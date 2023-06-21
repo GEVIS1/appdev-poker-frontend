@@ -25,7 +25,7 @@ export enum HandResult {
 
 interface Combination {
   name: string;
-  function: (hand: Hand) => boolean;
+  evaluate: (hand: Hand) => boolean;
   score: number;
 }
 
@@ -134,47 +134,47 @@ const royalFlush = (hand: Hand): boolean => straightFlush(hand)
 const combinations: Array<Combination> = [
   {
     name: 'Royal Flush',
-    function: royalFlush,
+    evaluate: royalFlush,
     score: HandResult.RoyalFlush,
   },
   {
     name: 'Straight Flush',
-    function: straightFlush,
+    evaluate: straightFlush,
     score: HandResult.StraightFlush,
   },
   {
     name: 'Four of a Kind',
-    function: fourOfAKind,
+    evaluate: fourOfAKind,
     score: HandResult.Four,
   },
   {
     name: 'Full House',
-    function: fullHouse,
+    evaluate: fullHouse,
     score: HandResult.FullHouse,
   },
   {
     name: 'Flush',
-    function: flush,
+    evaluate: flush,
     score: HandResult.Flush,
   },
   {
     name: 'Straight',
-    function: straight,
+    evaluate: straight,
     score: HandResult.Straight,
   },
   {
     name: 'Three of a Kind',
-    function: threeOfAKind,
+    evaluate: threeOfAKind,
     score: HandResult.Three,
   },
   {
     name: 'Two Pairs',
-    function: twoPairs,
+    evaluate: twoPairs,
     score: HandResult.TwoPairs,
   },
   {
     name: 'One Pair',
-    function: onePair,
+    evaluate: onePair,
     score: HandResult.OnePair,
   },
 ];
