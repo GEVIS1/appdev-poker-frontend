@@ -23,6 +23,7 @@ const startGame = async (user: User, gameId: string) => {
 
     await setDoc(gameDocRef, gameDocument, { merge: true });
   } catch (e) {
+    alert(e);
     console.error(e);
   }
 };

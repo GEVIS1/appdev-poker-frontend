@@ -70,6 +70,7 @@ async function removeUserFromGame(user: User, gameId: string) {
     );
   } catch (e) {
     console.error('Could not remove user from game: ', e);
+    alert(e);
   }
 }
 

@@ -64,6 +64,7 @@ export function AuthProvider({ children }: Props) {
         else setUser(null);
       } catch (e) {
         window.console.error(e);
+        alert(e);
         setUser(null);
       } finally {
         setWaitingForAuth(false);
@@ -97,6 +98,7 @@ export function AuthProvider({ children }: Props) {
           } catch (e) {
             setUserData(null);
             console.log('Caught error in user data snapshot: ', e);
+            alert(e);
           }
         },
       );

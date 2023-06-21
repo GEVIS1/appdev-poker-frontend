@@ -17,6 +17,7 @@ function CreateGameButton() {
       setCurrentGame(null);
       setInGame(false);
       // TODO: Handle error
+      alert(e);
       console.error(e);
     }
   };

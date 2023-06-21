@@ -45,6 +45,7 @@ async function addUserToGame(user: User, gameId: string) {
     });
   } catch (e) {
     console.error('Could not add user to game: ', e);
+    alert(e);
   }
 }
 

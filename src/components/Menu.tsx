@@ -19,6 +19,7 @@ function Menu() {
         await anonymousSignIn();
       } catch (e) {
         // Todo add modal popup for error
+        alert(e);
         window.console.error(e);
       }
     }
@@ -30,6 +31,7 @@ function Menu() {
         await googleSignIn();
       } catch (e) {
         // Todo add modal popup for error
+        alert(e);
         window.console.error(e);
       }
     }
