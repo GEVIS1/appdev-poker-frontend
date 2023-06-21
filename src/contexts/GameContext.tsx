@@ -51,10 +51,6 @@ export default function GameProvider({ children }: GameProviderProps) {
     if (userData) {
       setInGame(userData.inGame);
       setCurrentGame(userData.gameId);
-
-      if (window.location.pathname !== userData.gameId) {
-        window.history.pushState({}, '', userData.gameId);
-      }
     }
   }, [userData]);
 
@@ -84,8 +80,6 @@ export default function GameProvider({ children }: GameProviderProps) {
         setCurrentGame(gameId);
         setInGame(true);
         addUserToGame(user, gameId);
-        console.log('Joined game', gameId);
-        window.history.pushState({}, '', gameId);
       } else {
         throw new Error(`Could not join game ${gameId}`);
       }
@@ -102,8 +96,6 @@ export default function GameProvider({ children }: GameProviderProps) {
       setInGame(false);
       setCurrentGame(null);
       removeUserFromGame(user, gameId);
-      console.log('Left game: ', gameId);
-      window.history.pushState({}, '', '/');
     },
     [user, setInGame, setCurrentGame],
   );
