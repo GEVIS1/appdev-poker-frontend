@@ -3,7 +3,7 @@ import { useContext } from 'react';
 import { AuthContext } from './contexts/AuthContext';
 import NavBar from './components/NavBar';
 import Spinner from './components/Spinner';
-import Game from './components/Game';
+import Main from './components/Main';
 import GameProvider from './contexts/GameContext';
 
 function App() {
@@ -14,7 +14,7 @@ function App() {
       <NavBar />
       {!waitingForAuth && !processingLogin ? (
         <GameProvider>
-          <Game />
+          <Main />
         </GameProvider>
       ) : (
         <div className="flex justify-center items-center h-gamearea">
