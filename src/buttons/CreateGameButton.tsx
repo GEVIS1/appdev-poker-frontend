@@ -10,6 +10,8 @@ function CreateGameButton() {
 
   const handleCreateGame = async () => {
     try {
+      if (!user) throw new Error('User not logged in');
+
       const [gameId, inGame] = await createGame(user);
       setCurrentGame(gameId);
       setInGame(inGame);
