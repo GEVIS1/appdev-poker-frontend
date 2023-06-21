@@ -1,3 +1,4 @@
+import { TupleOf } from '../utilitytypes';
 import combinations from './combinations';
 
 export enum Suit {
@@ -33,6 +34,8 @@ class Poker {
   deck: Array<Card> = [];
 
   discard: Array<Card> = [];
+
+  HAND_SIZE = 5 as const;
 
   constructor() {
     this.constructDeck();
@@ -143,12 +146,51 @@ class Poker {
     return pickedCard;
   }
 
+  /**
+   * Why dealACard when you can dealAHand?
+   * @returns A hand of cards of length HAND_SIZE.
+   */
+  public dealAHand() {
+    const cards = [];
 
-  public static calculateScore(hand: Hand) {
-    const { cards } = hand;
+    for (let i = 0; i < this.HAND_SIZE; i += 1) {
+      cards.push(this.dealACard());
+    }
 
-    // Sort the cards in ascending order
-    cards.sort((a, b) => a.rank - b.rank);
+    const hand: Hand = {
+      /*
+       * TODO: Figure out why the utility type only accepts literal 5
+       * and not this.HAND_SIZE or a variable with the value 5.
+       */
+      cards: cards as TupleOf<Card, 5>,
+    };
+
+    return hand;
+  }
+
+  /**
+   * Run through all the possible combinations and evaluate the hand with them.
+   * @param hand The hand to evaluate.
+   * @returns The name of the combination and the score of the hand.
+   */
+  public static calculateScore(hand: Hand): [string, number] {
+    // Sort hand descending by rank and get the highest card
+    const highCard = hand.cards
+      .sort((a, b) => b.rank - a.rank)
+      .map((card) => card.rank)[0];
+
+    for (let i = 0; i < combinations.length; i += 1) {
+      const combination = combinations[i];
+      /*
+       * If the combination evaluates to true we know that the hand is
+       * that combination and we can return it, ending the loop.
+       */
+      if (combination.evaluate(hand) === true) {
+        return [combination.name, combination.score + highCard];
+      }
+    }
+    // If we get to the end of the loop and no combination is found, the hand is a high card
+    return ['High Card', highCard];
   }
 }
 
