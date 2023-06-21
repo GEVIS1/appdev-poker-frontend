@@ -1,5 +1,8 @@
 # [Currently in the very early stages! Breakage is expected.](https://en.wiktionary.org/wiki/infancy#Noun)
 
+# Deployment
+[Here](https://project-23s1-gevis1.web.app/)
+
 # This is the repo for a online multiplayer poker game application 🃏♠
 It is built using react for the front-end with state management and authentication handled by firebase
 
