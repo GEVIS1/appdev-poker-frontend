@@ -47,7 +47,8 @@ class Poker {
   public constructDeck() {
     /*
      * Unfortunately there is no good/safe way to get the length of enums
-     * in TypeScript, so we construct two arrays. Since we can safely assume that the standard
+     * in TypeScript (that I'm aware of currently),
+     * so we construct two arrays. Since we can safely assume that the standard
      * playing card deck ranks and suits will not change any time soon,
      * we hard code two arrays for looping through to construct the deck.
      */
@@ -121,25 +122,16 @@ class Poker {
   }
 
   /**
-   * Randomly pick a card from the deck and add it to the discard array.
+   * Deal the top card of the deck by returning it and putting a copy in the discard pile.
+   * Will throw an error if the deck is empty.
    * @returns The picked card.
    */
   public dealACard() {
-    const cardIndex = this.randomCardIndex();
-    const pickedCard = this.deck[cardIndex];
+    const pickedCard = this.deck.pop();
 
-    // Filter the picked card out of the deck
-    this.deck = this.deck.filter((card) => {
-      /*
-       * If the suit and the rank of the card in the deck matches
-       * the picked card, don't let it through the filter.
-       */
-      if (pickedCard.suit === card.suit && pickedCard.rank === card.rank) {
-        return false;
-      }
-
-      return true;
-    });
+    if (pickedCard === undefined) {
+      throw new Error('Deck is empty.');
+    }
 
     this.discard.push(pickedCard);
 
@@ -151,6 +143,10 @@ class Poker {
    * @returns A hand of cards of length HAND_SIZE.
    */
   public dealAHand() {
+    if (this.deck.length < this.HAND_SIZE) {
+      throw new Error('Not enough cards left in the deck to deal a hand.');
+    }
+
     const cards = [];
 
     for (let i = 0; i < this.HAND_SIZE; i += 1) {
