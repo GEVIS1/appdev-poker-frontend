@@ -94,8 +94,8 @@ const straight = (hand: NonNullableHand): boolean => {
   /*
    * The ace is a special case because it can be 1 or 14.
    * If the hand has any of the numbers between 2 and 5 in it,
-   * the only way to get a straight is with a low ace. So set it
-   * to 1 instead of 14.
+   * the only way to get a straight is with a low ace. So set its
+   * value to 1 instead of 14.
    */
   if (sorted[sorted.length - 1].rank === 14) {
     for (let i = 0; i < sorted.length; i += 1) {
@@ -105,7 +105,15 @@ const straight = (hand: NonNullableHand): boolean => {
         || sorted[i].rank === 4
         || sorted[i].rank === 5
       ) {
-        sorted[sorted.length - 1].rank = 1 as Rank;
+        sorted = sorted.map((card) => {
+          if (card.rank === 14) {
+            const newCard = card;
+            newCard.rank = 1 as Rank;
+            return newCard;
+          }
+
+          return card;
+        }) as [Card, Card, Card, Card, Card];
         sorted = sorted.sort((a, b) => a.rank - b.rank);
         break;
       }
