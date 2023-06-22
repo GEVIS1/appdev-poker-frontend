@@ -47,7 +47,8 @@ async function createGame(user: User): Promise<[string | null, boolean]> {
       players: [creator],
       hands: startHands,
       creator,
-      currentTurn: 0,
+      currentTurn: -1,
+      results: Array(4).fill({ score: 0, combination: null }),
       createdAt: serverTimestamp(),
     } as Omit<PokerGame, 'gameId'> & { createdAt: FieldValue };
 
