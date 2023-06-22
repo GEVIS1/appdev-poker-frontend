@@ -20,6 +20,9 @@ const startGame = async (user: User, gameId: string) => {
     }
 
     gameDocument.open = false;
+    gameDocument.currentTurn = -1;
+
+    // TODO: Add further start game logic here
 
     await setDoc(gameDocRef, gameDocument, { merge: true });
   } catch (e) {
