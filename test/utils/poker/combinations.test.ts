@@ -517,23 +517,62 @@ describe('combinations tests', () => {
     }
   });
 
-  // it('One Pair', () => {
-  //   const combination = combinations[8];
-  //   const hands: Array<[NonNullableHand, boolean]> = [
-  //     [{
-  //     cards: [
-  //       { suit: Suit.Spade, rank: Rank.ACE },
-  //       { suit: Suit.Spade, rank: Rank.ACE },
-  //       { suit: Suit.Spade, rank: Rank.ACE },
-  //       { suit: Suit.Spade, rank: Rank.ACE },
-  //       { suit: Suit.Spade, rank: Rank.ACE },
-  //     ]
-  //   }, true],
-  //   ]
+  it('One Pair', () => {
+    const combination = combinations[8];
+    const hands: Array<[NonNullableHand, boolean]> = [
+      [
+        {
+          cards: [
+            { suit: Suit.Spade, rank: Rank.ACE },
+            { suit: Suit.Spade, rank: Rank.ACE },
+            { suit: Suit.Spade, rank: Rank.TWO },
+            { suit: Suit.Spade, rank: Rank.THREE },
+            { suit: Suit.Spade, rank: Rank.FOUR },
+          ],
+        },
+        true,
+      ],
+      [
+        {
+          cards: [
+            { suit: Suit.Spade, rank: Rank.TWO },
+            { suit: Suit.Spade, rank: Rank.KING },
+            { suit: Suit.Spade, rank: Rank.SEVEN },
+            { suit: Suit.Spade, rank: Rank.SIX },
+            { suit: Suit.Spade, rank: Rank.SEVEN },
+          ],
+        },
+        true,
+      ],
+      [
+        {
+          cards: [
+            { suit: Suit.Spade, rank: Rank.ACE },
+            { suit: Suit.Spade, rank: Rank.KING },
+            { suit: Suit.Spade, rank: Rank.QUEEN },
+            { suit: Suit.Spade, rank: Rank.JACK },
+            { suit: Suit.Spade, rank: Rank.TEN },
+          ],
+        },
+        false,
+      ],
+      [
+        {
+          cards: [
+            { suit: Suit.Spade, rank: Rank.TEN },
+            { suit: Suit.Spade, rank: Rank.FOUR },
+            { suit: Suit.Spade, rank: Rank.SIX },
+            { suit: Suit.Spade, rank: Rank.NINE },
+            { suit: Suit.Spade, rank: Rank.ACE },
+          ],
+        },
+        false,
+      ],
+    ];
 
-  //   for (let i = 0; i < hands.length; i += 1) {
-  //     const result = combination.evaluate(hands[i][0]);
-  //     expect(result).toBe(hands[i][1]);
-  //   }
-  // });
+    for (let i = 0; i < hands.length; i += 1) {
+      const result = combination.evaluate(hands[i][0]);
+      expect(result).toBe(hands[i][1]);
+    }
+  });
 });
