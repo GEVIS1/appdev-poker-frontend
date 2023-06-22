@@ -83,7 +83,9 @@ const threeOfAKind = (hand: NonNullableHand): boolean =>
  * @returns A boolean indicating if the hand has a straight.
  */
 const straight = (hand: NonNullableHand): boolean => {
-  let sorted = hand.cards.sort((a, b) => a.rank - b.rank);
+  // This function can manipulate the original array so we make a copy.
+  const handClone = structuredClone(hand);
+  let sorted = handClone.cards.sort((a, b) => a.rank - b.rank);
 
   /*
    * The ace is a special case because it can be 1 or 14.
