@@ -32,6 +32,14 @@ interface Combination {
 }
 
 /**
+ * We know that Hand will always have cards when these functions are called so we can
+ * "safely" redefine it here without the possibly null cards field.
+ */
+interface Hand {
+  cards: [Card, Card, Card, Card, Card];
+}
+
+/**
  * Utility curry function to test if a hand has a pair with a given card.
  * @param hand The hand to test.
  * @returns A predicate function that tests if a hand has a pair with the given card.
