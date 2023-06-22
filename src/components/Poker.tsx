@@ -7,14 +7,12 @@ import PokerClass, { Card, Hand } from '../utils/poker/game';
 import CardComponent from './CardComponent';
 import HiddenHand from './HiddenHand';
 import OtherHand from './OtherHand';
-import { Player } from '../utils/firebase/poker';
+import { Player, Result } from '../utils/firebase/poker';
 import endTurn from '../utils/firebase/endTurn';
 
 // Prototype code below ==========================================================================
 const poker = new PokerClass();
 poker.shuffleDeck();
-
-const scores = [123, 239, 0, 0];
 
 const defaultHand: Hand = poker.dealAHand();
 // Prototype code above ==========================================================================
@@ -26,6 +24,7 @@ function Poker() {
     gameData && user && gameData.creator.uid === user.uid,
   );
   const [yourIndex, setYourIndex] = useState<number | null>(null);
+  const [winnerIndex, setWinnerIndex] = useState(-1);
 
   // Prototype code below ==========================================================================
   const [currentHand, setCurrentHand] = useState<Hand>(defaultHand);
@@ -63,10 +62,30 @@ function Poker() {
         if (playerIndex === -1) return;
         setYourIndex(playerIndex);
       }
+
+      /*
+       * Set the winner index if it's turn -1 and there are scores.
+       */
+      if (gameData.currentTurn === -1) {
+        /*
+         * Currently only supports one winner out of a tie
+         * which in the case of a draw will be the player that joined the game first.
+         */
+        const scores = gameData.results.map((r: Result) => r.score).sort();
+        console.log(scores);
+        const highestScore = scores.pop();
+        console.log(highestScore);
+        const winner = gameData.results.findIndex(
+          (r: Result) => r.score === highestScore,
+        );
+        setWinnerIndex(winner);
+      } else {
+        setWinnerIndex(-1);
+      }
     }
   }, [gameData, user]);
 
-  if (currentGame && gameData && user && yourIndex !== null) {
+  if (currentGame && gameData && user && yourIndex !== null && gameData.hands) {
     return (
       <div
         id="poker"
@@ -85,7 +104,7 @@ function Poker() {
             if (gameData.players[i]?.uid === user.uid || !gameData.players[i]) {
               return null;
             }
-            if (hand.cards === null) {
+            if (hand.cards === null || gameData.currentTurn !== -1) {
               return <HiddenHand keyProp={i.toString()} />;
             }
             return (
@@ -98,7 +117,9 @@ function Poker() {
                 hand={hand}
                 currentTurn={gameData.currentTurn === i}
                 playerName={gameData.players[i].name}
-                score={scores[i]}
+                playerIndex={i}
+                winnerIndex={winnerIndex}
+                result={gameData.results[i]}
               />
             );
           })}
@@ -111,11 +132,14 @@ function Poker() {
               yourIndex === gameData.currentTurn
                 ? 'border-yellow-600'
                 : 'border-green-900'
+            } ${
+              // If you are the winner draw the blue border
+              winnerIndex === yourIndex ? 'border-blue-500' : ''
             }`}
           >
             <div className="flex flex-row justify-between">
-              {scores[yourIndex] ? (
-                <div>{`Score: ${scores[yourIndex]}`}</div>
+              {gameData.results[yourIndex].score ? (
+                <div>{`Score: ${gameData.results[yourIndex].combination} (${gameData.results[yourIndex].score})`}</div>
               ) : null}
             </div>
             <div id="myHand" className="flex flex-col">
@@ -143,7 +167,7 @@ function Poker() {
               {yourIndex === gameData.currentTurn && (
                 <button
                   type="button"
-                  onClick={() => endTurn(user, currentGame)}
+                  onClick={() => endTurn(yourIndex, currentGame, currentHand)}
                   className="bg-yellow-600 rounded-md px-2 py-1 text-white "
                 >
                   End Turn
