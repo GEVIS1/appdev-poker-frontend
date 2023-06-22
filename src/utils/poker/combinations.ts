@@ -64,7 +64,11 @@ const onePair = (hand: NonNullableHand): boolean =>
 const twoPairs = (hand: NonNullableHand): boolean => {
   const pairs = hand.cards.filter(isPair(hand));
 
-  return pairs.length === 2;
+  /*
+   * We leave both copies of the ranked pair in the array so there will be four cards
+   * in the pairs array, two for each pair.
+   */
+  return pairs.length === 4;
 };
 
 /**
