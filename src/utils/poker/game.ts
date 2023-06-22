@@ -1,4 +1,6 @@
 import { TupleOf } from '../utilitytypes';
+// TODO: Fix dependency cycle
+// eslint-disable-next-line import/no-cycle
 import combinations from './combinations';
 
 export enum Suit {

@@ -1,4 +1,6 @@
-import { Card, Hand } from './game';
+// TODO: Fix dependency cycle
+// eslint-disable-next-line import/no-cycle
+import { Card } from './game';
 
 /**
  * The possible results of a hand.
