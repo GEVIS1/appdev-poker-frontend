@@ -11,6 +11,11 @@ export interface Player {
   uid: string;
 }
 
+export interface Result {
+  score: number;
+  combination: string;
+}
+
 class PokerGame {
   gameName: string;
 
@@ -24,6 +29,8 @@ class PokerGame {
 
   currentTurn: number;
 
+  results: Array<Result>;
+
   gameId: string;
 
   constructor(
@@ -34,6 +41,7 @@ class PokerGame {
     hands: Array<Hand> = [],
     open = true,
     currentTurn = 0,
+    results = [],
   ) {
     this.gameName = gameName;
     this.creator = creator;
@@ -42,6 +50,7 @@ class PokerGame {
     this.hands = hands;
     this.open = open;
     this.currentTurn = currentTurn;
+    this.results = results;
   }
 }
 
@@ -54,6 +63,7 @@ const pokerGameConverter = {
       hands: pokerGame.hands,
       open: pokerGame.open,
       currentTurn: pokerGame.currentTurn,
+      results: pokerGame.results,
     };
   },
   fromFirestore(
@@ -69,6 +79,7 @@ const pokerGameConverter = {
       data.hands,
       data.open,
       data.currentTurn,
+      data.results,
     );
   },
 };
