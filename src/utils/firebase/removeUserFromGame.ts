@@ -36,6 +36,7 @@ async function removeUserFromGame(user: User, gameId: string) {
       throw new Error('Player not found in game.');
     }
 
+    // TODO: Figure out why in some circumstances the last player leaving doesn't delete the game
     if (gameDocument.players.length > 1) {
       // Give someone else ownership if owner leaves
       if (gameDocument.creator.uid === user.uid) {
