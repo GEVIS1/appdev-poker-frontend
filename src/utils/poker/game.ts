@@ -1,7 +1,7 @@
 import { TupleOf } from '../utilitytypes';
 // TODO: Fix dependency cycle
 // eslint-disable-next-line import/no-cycle
-import combinations from './combinations';
+import combinations, { NonNullableHand } from './combinations';
 
 export enum Suit {
   Spade = 'SPADE',
@@ -172,6 +172,10 @@ class Poker {
    * @returns The name of the combination and the score of the hand.
    */
   public static calculateScore(hand: Hand): [string, number] {
+    if (hand.cards === null) {
+      throw new Error('No cards in hand.');
+    }
+
     // Sort hand descending by rank and get the highest card
     const highCard = hand.cards
       .sort((a, b) => b.rank - a.rank)
@@ -183,7 +187,7 @@ class Poker {
        * If the combination evaluates to true we know that the hand is
        * that combination and we can return it, ending the loop.
        */
-      if (combination.evaluate(hand) === true) {
+      if (combination.evaluate(hand as NonNullableHand) === true) {
         return [combination.name, combination.score + highCard];
       }
     }

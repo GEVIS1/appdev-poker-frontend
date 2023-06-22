@@ -27,7 +27,7 @@ export enum HandResult {
 
 interface Combination {
   name: string;
-  evaluate: (hand: Hand) => boolean;
+  evaluate: (hand: NonNullableHand) => boolean;
   score: number;
 }
 
@@ -35,7 +35,7 @@ interface Combination {
  * We know that Hand will always have cards when these functions are called so we can
  * "safely" redefine it here without the possibly null cards field.
  */
-interface Hand {
+export interface NonNullableHand {
   cards: [Card, Card, Card, Card, Card];
 }
 
@@ -44,8 +44,10 @@ interface Hand {
  * @param hand The hand to test.
  * @returns A predicate function that tests if a hand has a pair with the given card.
  */
-const isPair = (hand: Hand) => (card: Card) => hand.cards.filter(
-  (c: Card) => c.rank === card.rank,
+const isPair = (hand: NonNullableHand) => 
+  (card: Card) => 
+  hand.cards.filter(
+    (c: Card) => c.rank === card.rank,
 ).length === 2;
 
 /**
@@ -54,14 +56,14 @@ const isPair = (hand: Hand) => (card: Card) => hand.cards.filter(
  * @param hand The hand to test.
  * @returns A boolean indicating if the hand has one pair.
  */
-const onePair = (hand: Hand): boolean => hand.cards.some(isPair(hand));
+const onePair = (hand: NonNullableHand): boolean => hand.cards.some(isPair(hand));
 
 /**
  * Tests for each card if there is a pair and that there are two pairs total
  * @param hand The hand to test.
  * @returns A boolean indicating if the hand has two pairs.
  */
-const twoPairs = (hand: Hand): boolean => {
+const twoPairs = (hand: NonNullableHand): boolean => {
   const pairs = hand.cards.filter(isPair(hand));
 
   return pairs.length === 2;
@@ -72,7 +74,7 @@ const twoPairs = (hand: Hand): boolean => {
  * @param hand The hand to test.
  * @returns A boolean indicating if the hand has three of a kind.
  */
-const threeOfAKind = (hand: Hand): boolean => hand.cards.some(
+const threeOfAKind = (hand: NonNullableHand): boolean => hand.cards.some(
   (card) => hand.cards.filter((c) => c.rank === card.rank).length === 3,
 );
 
@@ -81,7 +83,7 @@ const threeOfAKind = (hand: Hand): boolean => hand.cards.some(
  * @param hand The hand to test.
  * @returns A boolean indicating if the hand has a straight.
  */
-const straight = (hand: Hand): boolean => {
+const straight = (hand: NonNullableHand): boolean => {
   const sorted = hand.cards.sort((a, b) => a.rank - b.rank);
 
   /*
@@ -98,11 +100,12 @@ const straight = (hand: Hand): boolean => {
 };
 
 /**
- * Tests for the hand having a flush by checking if each card has the same suit.
+ * Tests for the hand having a flush by checking if each 
+ * card has the same suit.
  * @param hand The hand to test.
  * @returns A boolean indicating if the hand has a flush.
  */
-const flush = (hand: Hand): boolean => hand.cards.every(
+const flush = (hand: NonNullableHand): boolean => hand.cards.every(
   (card) => card.suit === hand.cards[0].suit,
 );
 
@@ -111,14 +114,14 @@ const flush = (hand: Hand): boolean => hand.cards.every(
  * @param hand The hand to test.
  * @returns A boolean indicating if the hand has a full house.
  */
-const fullHouse = (hand: Hand): boolean => threeOfAKind(hand) && onePair(hand);
+const fullHouse = (hand: NonNullableHand): boolean => threeOfAKind(hand) && onePair(hand);
 
 /**
  * Tests for a four of a kind by checking if there is a card that appears four times.
  * @param hand The hand to test.
  * @returns A boolean indicating if the hand has four of a kind.
  */
-const fourOfAKind = (hand: Hand): boolean => hand.cards.some(
+const fourOfAKind = (hand: NonNullableHand): boolean => hand.cards.some(
   (card) => hand.cards.filter((c) => c.rank === card.rank).length === 4,
 );
 
@@ -127,14 +130,14 @@ const fourOfAKind = (hand: Hand): boolean => hand.cards.some(
  * @param hand The hand to test.
  * @returns A boolean indicating if the hand has a straight flush.
  */
-const straightFlush = (hand: Hand): boolean => straight(hand) && flush(hand);
+const straightFlush = (hand: NonNullableHand): boolean => straight(hand) && flush(hand);
 
 /**
  * Tests for a royal flush by checking if the hand has a straight flush and a 10, J, Q, K, and A.
  * @param hand The hand to test.
  * @returns A boolean indicating if the hand has a royal flush.
  */
-const royalFlush = (hand: Hand): boolean => straightFlush(hand)
+const royalFlush = (hand: NonNullableHand): boolean => straightFlush(hand)
   && hand.cards.some((card) => card.rank === 14)
   && hand.cards.some((card) => card.rank === 13)
   && hand.cards.some((card) => card.rank === 12)
