@@ -209,25 +209,101 @@ describe('combinations tests', () => {
     }
   });
 
-  // it('Flush', () => {
-  //   const combination = combinations[4];
-  //   const hands: Array<[NonNullableHand, boolean]> = [
-  //     [{
-  //     cards: [
-  //       { suit: Suit.Spade, rank: Rank.ACE },
-  //       { suit: Suit.Spade, rank: Rank.ACE },
-  //       { suit: Suit.Spade, rank: Rank.ACE },
-  //       { suit: Suit.Spade, rank: Rank.ACE },
-  //       { suit: Suit.Spade, rank: Rank.ACE },
-  //     ]
-  //   }, true],
-  //   ]
+  it('Flush', () => {
+    const combination = combinations[4];
+    const hands: Array<[NonNullableHand, boolean]> = [
+      [
+        {
+          cards: [
+            { suit: Suit.Spade, rank: Rank.ACE },
+            { suit: Suit.Spade, rank: Rank.ACE },
+            { suit: Suit.Spade, rank: Rank.ACE },
+            { suit: Suit.Spade, rank: Rank.ACE },
+            { suit: Suit.Spade, rank: Rank.ACE },
+          ],
+        },
+        true,
+      ],
+      [
+        {
+          cards: [
+            { suit: Suit.Club, rank: Rank.ACE },
+            { suit: Suit.Club, rank: Rank.ACE },
+            { suit: Suit.Club, rank: Rank.ACE },
+            { suit: Suit.Club, rank: Rank.ACE },
+            { suit: Suit.Club, rank: Rank.ACE },
+          ],
+        },
+        true,
+      ],
+      [
+        {
+          cards: [
+            { suit: Suit.Heart, rank: Rank.ACE },
+            { suit: Suit.Heart, rank: Rank.ACE },
+            { suit: Suit.Heart, rank: Rank.ACE },
+            { suit: Suit.Heart, rank: Rank.ACE },
+            { suit: Suit.Heart, rank: Rank.ACE },
+          ],
+        },
+        true,
+      ],
+      [
+        {
+          cards: [
+            { suit: Suit.Diamond, rank: Rank.ACE },
+            { suit: Suit.Diamond, rank: Rank.ACE },
+            { suit: Suit.Diamond, rank: Rank.ACE },
+            { suit: Suit.Diamond, rank: Rank.ACE },
+            { suit: Suit.Diamond, rank: Rank.ACE },
+          ],
+        },
+        true,
+      ],
+      [
+        {
+          cards: [
+            { suit: Suit.Heart, rank: Rank.ACE },
+            { suit: Suit.Diamond, rank: Rank.ACE },
+            { suit: Suit.Diamond, rank: Rank.ACE },
+            { suit: Suit.Diamond, rank: Rank.ACE },
+            { suit: Suit.Diamond, rank: Rank.ACE },
+          ],
+        },
+        false,
+      ],
+      [
+        {
+          cards: [
+            { suit: Suit.Club, rank: Rank.ACE },
+            { suit: Suit.Spade, rank: Rank.ACE },
+            { suit: Suit.Spade, rank: Rank.ACE },
+            { suit: Suit.Spade, rank: Rank.ACE },
+            { suit: Suit.Spade, rank: Rank.ACE },
+          ],
+        },
+        false,
+      ],
+      [
+        {
+          cards: [
+            { suit: Suit.Club, rank: Rank.ACE },
+            { suit: Suit.Spade, rank: Rank.ACE },
+            { suit: Suit.Heart, rank: Rank.ACE },
+            { suit: Suit.Diamond, rank: Rank.ACE },
+            { suit: Suit.Diamond, rank: Rank.ACE },
+          ],
+        },
+        false,
+      ],
+    ];
 
-  //   for (let i = 0; i < hands.length; i += 1) {
-  //     const result = combination.evaluate(hands[i][0]);
-  //     expect(result).toBe(hands[i][1]);
-  //   }
-  // });
+    for (let i = 0; i < hands.length; i += 1) {
+      const result = combination.evaluate(hands[i][0]);
+      expect(result).toBe(hands[i][1]);
+    }
+  });
+
   // it('Straight', () => {
   //   const combination = combinations[5];
   //   const hands: Array<[NonNullableHand, boolean]> = [
