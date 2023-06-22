@@ -12,7 +12,7 @@ function HiddenHand({ keyProp }: HiddenHandProps) {
       key={keyProp}
     >
       {[0, 1, 2, 3, 4].map((card) => (
-        <CardComponent className="text-8xl" key={card} faceDown />
+        <CardComponent className="text-8xl" key={keyProp + card} faceDown />
       ))}
     </div>
   );
