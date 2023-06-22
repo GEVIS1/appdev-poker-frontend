@@ -42,9 +42,10 @@ function OtherHand({
       </div>
       <div className="flex flex-row justify-between gap-5 pt-2">
         <div>{`Name: ${playerName}`}</div>
-        {result ? (
+        {winnerIndex === playerIndex && <div>Winner!</div>}
+        {result && (
           <div>{`Score: ${result.combination} (${result.score})`}</div>
-        ) : null}
+        )}
       </div>
     </div>
   );
