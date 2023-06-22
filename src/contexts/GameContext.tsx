@@ -9,7 +9,7 @@ import {
   useEffect,
   useCallback,
 } from 'react';
-import { DocumentData, doc, onSnapshot } from 'firebase/firestore';
+import { doc, onSnapshot } from 'firebase/firestore';
 import addUserToGame from '../utils/firebase/addUserToGame';
 import removeUserFromGame from '../utils/firebase/removeUserFromGame';
 import { AuthContext } from './AuthContext';
@@ -43,7 +43,7 @@ interface GameProviderProps {
 export default function GameProvider({ children }: GameProviderProps) {
   const [inGame, setInGame] = useState(false);
   const [currentGame, setCurrentGame] = useState<null | string>(null);
-  const [gameData, setGameData] = useState<null | DocumentData>(null);
+  const [gameData, setGameData] = useState<null | PokerGame>(null);
 
   const { user, userData } = useContext(AuthContext);
 
@@ -61,7 +61,7 @@ export default function GameProvider({ children }: GameProviderProps) {
         doc(firestore, 'games', currentGame),
         (document) => {
           if (document.exists()) {
-            setGameData(document.data());
+            setGameData(document.data() as PokerGame);
           }
         },
       );

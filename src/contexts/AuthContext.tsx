@@ -22,7 +22,7 @@ import { firebaseAuth, firestore } from '../utils/firebase/firebase';
 
 export interface AuthContextData {
   user: User | null;
-  userData: DocumentData;
+  userData: DocumentData | null;
   logOutUser: (() => Promise<void>) | null;
   anonymousSignIn: (() => Promise<UserCredential | Error>) | null;
   googleSignIn: (() => Promise<UserCredential | Error>) | null;
