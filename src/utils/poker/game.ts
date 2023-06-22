@@ -27,7 +27,7 @@ export interface Card {
   rank: Rank;
 }
 export interface Hand {
-  cards: [Card, Card, Card, Card, Card];
+  cards: [Card, Card, Card, Card, Card] | null;
 }
 
 class Poker {
