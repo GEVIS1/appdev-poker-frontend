@@ -125,7 +125,7 @@ function Poker() {
               return null;
             }
             if (hand.cards === null || gameData.currentTurn !== -1) {
-              return <HiddenHand keyProp={i.toString()} />;
+              return <HiddenHand key={i.toString()} />;
             }
             return (
               <OtherHand
