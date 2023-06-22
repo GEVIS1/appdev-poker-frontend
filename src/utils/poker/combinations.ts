@@ -44,8 +44,8 @@ export interface NonNullableHand {
  * @param hand The hand to test.
  * @returns A predicate function that tests if a hand has a pair with the given card.
  */
-const isPair = (hand: NonNullableHand) => (card: Card) =>
-  hand.cards.filter((c: Card) => c.rank === card.rank).length === 2;
+const isPair = (hand: NonNullableHand) => (card: Card): boolean =>
+  hand.cards.filter((c) => c.rank === card.rank).length === 2;
 
 /**
  * Tests for each card if there is another card with the same rank.
