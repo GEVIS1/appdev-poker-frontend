@@ -14,13 +14,14 @@ import addUserToGame from '../utils/firebase/addUserToGame';
 import removeUserFromGame from '../utils/firebase/removeUserFromGame';
 import { AuthContext } from './AuthContext';
 import { firestore } from '../utils/firebase/firebase';
+import { PokerGame } from '../utils/firebase/poker';
 
 export interface GameContextData {
   inGame: boolean;
   setInGame: Dispatch<SetStateAction<boolean>>;
   setCurrentGame: Dispatch<SetStateAction<string | null>>;
   currentGame: null | string;
-  gameData: null | DocumentData;
+  gameData: null | PokerGame;
   joinGame: (gameId: string) => void;
   leaveGame: (gameId: string) => void;
 }
