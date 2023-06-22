@@ -1,5 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import combinations, { NonNullableHand } from '../../../src/utils/poker/combinations';
+import combinations, {
+  NonNullableHand,
+} from '../../../src/utils/poker/combinations';
 import { Rank, Suit } from '../../../src/utils/poker/game';
 
 /*
@@ -11,25 +13,31 @@ describe('combinations tests', () => {
   it('Royal Flush', () => {
     const combination = combinations[0];
     const hands: Array<[NonNullableHand, boolean]> = [
-      [{
-      cards: [
-        { suit: Suit.Spade, rank: Rank.TEN },
-        { suit: Suit.Spade, rank: Rank.JACK },
-        { suit: Suit.Spade, rank: Rank.QUEEN },
-        { suit: Suit.Spade, rank: Rank.KING },
-        { suit: Suit.Spade, rank: Rank.ACE },
-      ]
-    }, true],
-    [{
-      cards: [
-        { suit: Suit.Spade, rank: Rank.TEN },
-        { suit: Suit.Spade, rank: Rank.JACK },
-        { suit: Suit.Club, rank: Rank.QUEEN },
-        { suit: Suit.Spade, rank: Rank.KING },
-        { suit: Suit.Spade, rank: Rank.ACE },
-      ]
-    }, false],
-    ]
+      [
+        {
+          cards: [
+            { suit: Suit.Spade, rank: Rank.TEN },
+            { suit: Suit.Spade, rank: Rank.JACK },
+            { suit: Suit.Spade, rank: Rank.QUEEN },
+            { suit: Suit.Spade, rank: Rank.KING },
+            { suit: Suit.Spade, rank: Rank.ACE },
+          ],
+        },
+        true,
+      ],
+      [
+        {
+          cards: [
+            { suit: Suit.Spade, rank: Rank.TEN },
+            { suit: Suit.Spade, rank: Rank.JACK },
+            { suit: Suit.Club, rank: Rank.QUEEN },
+            { suit: Suit.Spade, rank: Rank.KING },
+            { suit: Suit.Spade, rank: Rank.ACE },
+          ],
+        },
+        false,
+      ],
+    ];
 
     for (let i = 0; i < hands.length; i += 1) {
       const result = combination.evaluate(hands[i][0]);
@@ -39,49 +47,58 @@ describe('combinations tests', () => {
   it('Straight Flush', () => {
     const combination = combinations[1];
     const hands: Array<[NonNullableHand, boolean]> = [
-      [{
-      cards: [
-        { suit: Suit.Spade, rank: Rank.ACE },
-        { suit: Suit.Spade, rank: Rank.TWO },
-        { suit: Suit.Spade, rank: Rank.THREE },
-        { suit: Suit.Spade, rank: Rank.FOUR },
-        { suit: Suit.Spade, rank: Rank.FIVE },
-      ]
-    }, true],
-    [{
-      cards: [
-        { suit: Suit.Spade, rank: Rank.ACE },
-        { suit: Suit.Spade, rank: Rank.KING },
-        { suit: Suit.Spade, rank: Rank.QUEEN },
-        { suit: Suit.Spade, rank: Rank.JACK },
-        { suit: Suit.Spade, rank: Rank.TEN },
-      ]
-    }, true],
-    [{
-      cards: [
-        { suit: Suit.Spade, rank: Rank.ACE },
-        { suit: Suit.Spade, rank: Rank.TWO },
-        { suit: Suit.Spade, rank: Rank.THREE },
-        { suit: Suit.Spade, rank: Rank.FOUR },
-        { suit: Suit.Spade, rank: Rank.TEN },
-      ]
-    }, false],
-    [{
-      cards: [
-        { suit: Suit.Spade, rank: Rank.ACE },
-        { suit: Suit.Spade, rank: Rank.KING },
-        { suit: Suit.Spade, rank: Rank.QUEEN },
-        { suit: Suit.Spade, rank: Rank.JACK },
-        { suit: Suit.Spade, rank: Rank.FOUR },
-      ]
-    }, false],
-    ]
+      [
+        {
+          cards: [
+            { suit: Suit.Spade, rank: Rank.ACE },
+            { suit: Suit.Spade, rank: Rank.TWO },
+            { suit: Suit.Spade, rank: Rank.THREE },
+            { suit: Suit.Spade, rank: Rank.FOUR },
+            { suit: Suit.Spade, rank: Rank.FIVE },
+          ],
+        },
+        true,
+      ],
+      [
+        {
+          cards: [
+            { suit: Suit.Spade, rank: Rank.ACE },
+            { suit: Suit.Spade, rank: Rank.KING },
+            { suit: Suit.Spade, rank: Rank.QUEEN },
+            { suit: Suit.Spade, rank: Rank.JACK },
+            { suit: Suit.Spade, rank: Rank.TEN },
+          ],
+        },
+        true,
+      ],
+      [
+        {
+          cards: [
+            { suit: Suit.Spade, rank: Rank.ACE },
+            { suit: Suit.Spade, rank: Rank.TWO },
+            { suit: Suit.Spade, rank: Rank.THREE },
+            { suit: Suit.Spade, rank: Rank.FOUR },
+            { suit: Suit.Spade, rank: Rank.TEN },
+          ],
+        },
+        false,
+      ],
+      [
+        {
+          cards: [
+            { suit: Suit.Spade, rank: Rank.ACE },
+            { suit: Suit.Spade, rank: Rank.KING },
+            { suit: Suit.Spade, rank: Rank.QUEEN },
+            { suit: Suit.Spade, rank: Rank.JACK },
+            { suit: Suit.Spade, rank: Rank.FOUR },
+          ],
+        },
+        false,
+      ],
+    ];
 
     for (let i = 0; i < hands.length; i += 1) {
-      console.log(combination.name, " " + i);
       const result = combination.evaluate(hands[i][0]);
-      console.log(result)
-      console.log(hands[i][1])
       expect(result).toBe(hands[i][1]);
     }
   });
