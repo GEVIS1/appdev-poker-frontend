@@ -5,10 +5,11 @@ import {
   getDoc,
 } from 'firebase/firestore';
 import { firestore } from './firebase';
+import { PokerGame } from './poker';
 
 async function getGameData(
   gameId: string,
-): Promise<[DocumentData, DocumentReference<DocumentData>]> {
+): Promise<[PokerGame, DocumentReference<DocumentData>]> {
   const gameDocRef = doc(firestore, 'games', gameId);
   const snapshot = await getDoc(gameDocRef);
   const gameDocument = snapshot.data();
@@ -17,7 +18,11 @@ async function getGameData(
     throw new Error('Could not get document.');
   }
 
-  return [gameDocument, gameDocRef];
+  /*
+   * Ideally this should use a firestore converter but this needs a query
+   * or a typed collection reference.
+   */
+  return [gameDocument as PokerGame, gameDocRef];
 }
 
 export default getGameData;

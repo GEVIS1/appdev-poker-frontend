@@ -4,10 +4,18 @@ import {
   SnapshotOptions,
 } from 'firebase/firestore';
 
+import { Hand } from '../poker/game';
+
 export interface Player {
   name: string;
   uid: string;
 }
+
+export interface Result {
+  score: number;
+  combination: string;
+}
+
 class PokerGame {
   gameName: string;
 
@@ -15,9 +23,13 @@ class PokerGame {
 
   players: Array<Player>;
 
+  hands: Array<Hand>;
+
   open: boolean;
 
   currentTurn: number;
+
+  results: Array<Result>;
 
   gameId: string;
 
@@ -26,15 +38,19 @@ class PokerGame {
     creator: Player,
     players: Array<Player>,
     gameId: string,
+    hands: Array<Hand> = [],
     open = true,
     currentTurn = 0,
+    results = [],
   ) {
     this.gameName = gameName;
     this.creator = creator;
     this.players = players;
     this.gameId = gameId;
+    this.hands = hands;
     this.open = open;
     this.currentTurn = currentTurn;
+    this.results = results;
   }
 }
 
@@ -44,8 +60,10 @@ const pokerGameConverter = {
       gameName: pokerGame.gameName,
       creator: pokerGame.creator,
       players: pokerGame.players,
+      hands: pokerGame.hands,
       open: pokerGame.open,
       currentTurn: pokerGame.currentTurn,
+      results: pokerGame.results,
     };
   },
   fromFirestore(
@@ -58,8 +76,10 @@ const pokerGameConverter = {
       data.creator,
       data.players,
       snapshot.id,
+      data.hands,
       data.open,
       data.currentTurn,
+      data.results,
     );
   },
 };

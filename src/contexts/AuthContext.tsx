@@ -22,7 +22,7 @@ import { firebaseAuth, firestore } from '../utils/firebase/firebase';
 
 export interface AuthContextData {
   user: User | null;
-  userData: DocumentData;
+  userData: DocumentData | null;
   logOutUser: (() => Promise<void>) | null;
   anonymousSignIn: (() => Promise<UserCredential | Error>) | null;
   googleSignIn: (() => Promise<UserCredential | Error>) | null;
@@ -64,6 +64,7 @@ export function AuthProvider({ children }: Props) {
         else setUser(null);
       } catch (e) {
         window.console.error(e);
+        alert(e);
         setUser(null);
       } finally {
         setWaitingForAuth(false);
@@ -97,6 +98,7 @@ export function AuthProvider({ children }: Props) {
           } catch (e) {
             setUserData(null);
             console.log('Caught error in user data snapshot: ', e);
+            alert(e);
           }
         },
       );

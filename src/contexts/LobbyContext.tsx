@@ -16,7 +16,7 @@ import {
 
 import { firestore } from '../utils/firebase/firebase';
 import { AuthContext } from './AuthContext';
-import { PokerGame, pokerGameConverter } from '../utils/poker/poker';
+import { PokerGame, pokerGameConverter } from '../utils/firebase/poker';
 
 export interface LobbyContextData {
   gameData: PokerGame[];
@@ -63,6 +63,7 @@ export default function LobbyProvider({ children }: LobbyProviderProps) {
       setWaitingForLobbyData(false);
     } catch (e) {
       // TODO: Notify user in interface that something went wrong.
+      alert(e);
       console.error('Error starting onSnapshot listener: ', e);
     }
 

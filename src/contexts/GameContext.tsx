@@ -9,18 +9,19 @@ import {
   useEffect,
   useCallback,
 } from 'react';
-import { DocumentData, doc, onSnapshot } from 'firebase/firestore';
+import { doc, onSnapshot } from 'firebase/firestore';
 import addUserToGame from '../utils/firebase/addUserToGame';
 import removeUserFromGame from '../utils/firebase/removeUserFromGame';
 import { AuthContext } from './AuthContext';
 import { firestore } from '../utils/firebase/firebase';
+import { PokerGame } from '../utils/firebase/poker';
 
 export interface GameContextData {
   inGame: boolean;
   setInGame: Dispatch<SetStateAction<boolean>>;
   setCurrentGame: Dispatch<SetStateAction<string | null>>;
   currentGame: null | string;
-  gameData: null | DocumentData;
+  gameData: null | PokerGame;
   joinGame: (gameId: string) => void;
   leaveGame: (gameId: string) => void;
 }
@@ -42,7 +43,7 @@ interface GameProviderProps {
 export default function GameProvider({ children }: GameProviderProps) {
   const [inGame, setInGame] = useState(false);
   const [currentGame, setCurrentGame] = useState<null | string>(null);
-  const [gameData, setGameData] = useState<null | DocumentData>(null);
+  const [gameData, setGameData] = useState<null | PokerGame>(null);
 
   const { user, userData } = useContext(AuthContext);
 
@@ -51,10 +52,6 @@ export default function GameProvider({ children }: GameProviderProps) {
     if (userData) {
       setInGame(userData.inGame);
       setCurrentGame(userData.gameId);
-
-      if (window.location.pathname !== userData.gameId) {
-        window.history.pushState({}, '', userData.gameId);
-      }
     }
   }, [userData]);
 
@@ -64,7 +61,7 @@ export default function GameProvider({ children }: GameProviderProps) {
         doc(firestore, 'games', currentGame),
         (document) => {
           if (document.exists()) {
-            setGameData(document.data());
+            setGameData(document.data() as PokerGame);
           }
         },
       );
@@ -84,8 +81,6 @@ export default function GameProvider({ children }: GameProviderProps) {
         setCurrentGame(gameId);
         setInGame(true);
         addUserToGame(user, gameId);
-        console.log('Joined game', gameId);
-        window.history.pushState({}, '', gameId);
       } else {
         throw new Error(`Could not join game ${gameId}`);
       }
@@ -102,8 +97,6 @@ export default function GameProvider({ children }: GameProviderProps) {
       setInGame(false);
       setCurrentGame(null);
       removeUserFromGame(user, gameId);
-      console.log('Left game: ', gameId);
-      window.history.pushState({}, '', '/');
     },
     [user, setInGame, setCurrentGame],
   );

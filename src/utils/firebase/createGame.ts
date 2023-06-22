@@ -11,7 +11,8 @@ import { User } from 'firebase/auth';
 
 import { firestore } from './firebase';
 import ErrorType from '../errors';
-import { Player, PokerGame } from '../poker/poker';
+import { Player, PokerGame } from './poker';
+import { Rank, Suit } from '../poker/game';
 
 async function createGame(user: User): Promise<[string | null, boolean]> {
   try {
@@ -22,6 +23,16 @@ async function createGame(user: User): Promise<[string | null, boolean]> {
     if (!inputGameName || inputGameName.length < 1) {
       throw new Error(ErrorType.BadName);
     }
+
+    // If the game's name is test and we are in development mode start everyone with a hand of aces
+    const startHands = inputGameName === 'test' && import.meta.env.DEV
+      ? [
+        { cards: Array(5).fill({ suit: Suit.Spade, rank: Rank.ACE }) },
+        { cards: Array(5).fill({ suit: Suit.Spade, rank: Rank.ACE }) },
+        { cards: Array(5).fill({ suit: Suit.Spade, rank: Rank.ACE }) },
+        { cards: Array(5).fill({ suit: Suit.Spade, rank: Rank.ACE }) },
+      ]
+      : [{ cards: null }, { cards: null }, { cards: null }, { cards: null }];
 
     const name = user.displayName ?? 'Anonymous';
 
@@ -34,10 +45,12 @@ async function createGame(user: User): Promise<[string | null, boolean]> {
       gameName: inputGameName,
       open: true,
       players: [creator],
+      hands: startHands,
       creator,
-      currentTurn: 0,
+      currentTurn: -1,
+      results: Array(4).fill({ score: 0, combination: null }),
       createdAt: serverTimestamp(),
-    } as PokerGame & { createdAt: FieldValue };
+    } as Omit<PokerGame, 'gameId'> & { createdAt: FieldValue };
 
     const newGameRef = await addDoc(gamesReference, documentData);
 

@@ -1,4 +1,7 @@
-# [Currently in the very early stages! Breakage is expected.](https://en.wiktionary.org/wiki/infancy#Noun)
+# Deployed application
+[![QR Code pointing to deployed website](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://project-23s1-gevis1.web.app)](https://project-23s1-gevis1.web.app/)
+
+https://project-23s1-gevis1.web.app/
 
 # This is the repo for a online multiplayer poker game application 🃏♠
 It is built using react for the front-end with state management and authentication handled by firebase

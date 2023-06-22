@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import { GameContext } from '../contexts/GameContext';
-import { Player } from '../utils/poker/poker';
+import { Player } from '../utils/firebase/poker';
 
 interface JoinGameProps {
   open?: boolean;

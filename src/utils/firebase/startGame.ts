@@ -15,14 +15,16 @@ const startGame = async (user: User, gameId: string) => {
       throw new Error('Not enough players to start the game.');
     }
 
-    if (!gameDocument.open) {
-      throw new Error('Game is already started.');
+    if (gameDocument.open) {
+      gameDocument.open = false;
     }
+    gameDocument.currentTurn = 0;
 
-    gameDocument.open = false;
+    gameDocument.results = Array(4).fill({ score: 0, combination: null });
 
     await setDoc(gameDocRef, gameDocument, { merge: true });
   } catch (e) {
+    alert(e);
     console.error(e);
   }
 };

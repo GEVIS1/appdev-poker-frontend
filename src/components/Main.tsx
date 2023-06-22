@@ -6,19 +6,19 @@ import Poker from './Poker';
 import LobbyProvider from '../contexts/LobbyContext';
 import { GameContext } from '../contexts/GameContext';
 
-function Game() {
+function Main() {
   const { user } = useContext(AuthContext);
   const { inGame } = useContext(GameContext);
 
   if (inGame) {
     return (
-      <div id="game" className="flex justify-center p-6 h-gamearea">
+      <div id="main" className="flex justify-center p-6 h-gamearea">
         <Poker />
       </div>
     );
   }
   return (
-    <div id="game" className="flex justify-center p-6 h-gamearea">
+    <div id="main" className="flex justify-center p-6 h-gamearea">
       <LobbyProvider>
         <Lobby user={user} />
       </LobbyProvider>
@@ -26,4 +26,4 @@ function Game() {
   );
 }
 
-export default Game;
+export default Main;

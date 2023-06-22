@@ -2,7 +2,7 @@ import { User } from 'firebase/auth';
 import { setDoc, doc, deleteDoc } from 'firebase/firestore';
 import { firestore } from './firebase';
 import getGameData from './getGameData';
-import { Player } from '../poker/poker';
+import { Player } from './poker';
 
 async function removeUserFromGame(user: User, gameId: string) {
   try {
@@ -36,6 +36,7 @@ async function removeUserFromGame(user: User, gameId: string) {
       throw new Error('Player not found in game.');
     }
 
+    // TODO: Figure out why in some circumstances the last player leaving doesn't delete the game
     if (gameDocument.players.length > 1) {
       // Give someone else ownership if owner leaves
       if (gameDocument.creator.uid === user.uid) {
@@ -70,6 +71,7 @@ async function removeUserFromGame(user: User, gameId: string) {
     );
   } catch (e) {
     console.error('Could not remove user from game: ', e);
+    alert(e);
   }
 }
 
