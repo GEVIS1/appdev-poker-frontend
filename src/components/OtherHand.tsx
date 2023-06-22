@@ -1,4 +1,5 @@
 import { Result } from '../utils/firebase/poker';
+import getBorderColor from '../utils/getBorderColor';
 import { Hand } from '../utils/poker/game';
 import CardComponent from './CardComponent';
 
@@ -22,13 +23,13 @@ function OtherHand({
   if (hand.cards === null) {
     return <div>No cards in hand...</div>;
   }
+
+  const borderColor = getBorderColor(currentTurn, playerIndex, winnerIndex);
+
   return (
     <div
       id="otherHand"
-      className={`flex flex-col border-2 rounded-lg px-5 pb-4 pt-3 ${
-        // If it's the player's turn, highlight their hand
-        currentTurn ? 'border-yellow-600' : 'border-green-900'
-      } ${winnerIndex === playerIndex ? 'border-blue-500' : ''}`}
+      className={`flex flex-col border-2 rounded-lg px-5 pb-4 pt-3 ${borderColor}`}
     >
       <div className="flex flex-row gap-5">
         {hand.cards.map((card, i) => (

@@ -9,6 +9,7 @@ import HiddenHand from './HiddenHand';
 import OtherHand from './OtherHand';
 import { Player, Result } from '../utils/firebase/poker';
 import endTurn from '../utils/firebase/endTurn';
+import getBorderColor from '../utils/getBorderColor';
 
 // Prototype code below ==========================================================================
 const poker = new PokerClass();
@@ -25,6 +26,7 @@ function Poker() {
   );
   const [yourIndex, setYourIndex] = useState<number | null>(null);
   const [winnerIndex, setWinnerIndex] = useState(-1);
+  const [borderColor, setBorderColor] = useState('border-green-900');
 
   // Prototype code below ==========================================================================
   const [currentHand, setCurrentHand] = useState<Hand>(defaultHand);
@@ -62,6 +64,18 @@ function Poker() {
         if (playerIndex === -1) return;
         setYourIndex(playerIndex);
       }
+    }
+  }, [gameData, user]);
+
+  /*
+   * Set the border color of the player's card div.
+   */
+  useEffect(() => {
+    if (!yourIndex || !gameData) return;
+    setBorderColor(
+      getBorderColor(gameData.currentTurn === yourIndex, yourIndex, winnerIndex),
+    );
+  }, [gameData, yourIndex, winnerIndex]);
 
       /*
        * Set the winner index if it's turn -1 and there are scores.
@@ -127,15 +141,7 @@ function Poker() {
            * Draw the hand of the player.
            */}
           <div
-            className={`flex flex-col justify-center items-center mt-auto mb-auto border-2 rounded-lg px-5 pb-4 pt-1 ${
-              // If it's your turn, highlight your hand
-              yourIndex === gameData.currentTurn
-                ? 'border-yellow-600'
-                : 'border-green-900'
-            } ${
-              // If you are the winner draw the blue border
-              winnerIndex === yourIndex ? 'border-blue-500' : ''
-            }`}
+            className={`flex flex-col justify-center items-center mt-auto mb-auto border-2 rounded-lg px-5 pb-4 pt-1 ${borderColor}`}
           >
             <div className="flex flex-row justify-between">
               {gameData.results[yourIndex].score ? (
