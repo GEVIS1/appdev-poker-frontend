@@ -54,6 +54,20 @@ describe('Poker game tests', () => {
     expect(() => game.dealACard()).toThrow('Deck is empty.');
   });
 
+  it('Should throw an error when dealing a hand from an empty deck', () => {
+    const game = new Poker();
+
+    const iterations = game.deck.length;
+
+    for (let i = 0; i < iterations; i += 1) {
+      game.dealACard();
+    }
+
+    expect(() => game.dealAHand()).toThrow(
+      'Not enough cards left in the deck to deal a hand.'
+    );
+  });
+
   it('Should correctly calculate the scores for all the possible combinations', () => {
     const game = new Poker();
 
