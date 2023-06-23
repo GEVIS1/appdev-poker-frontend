@@ -13,7 +13,6 @@ It is built using react for the front-end with state management and authenticati
 4. Play!
 
 ## Screenshots
-The game is responsive and has interfaces for desktop and mobile play.
 
 ![desktop](https://github.com/BIT-Advanced-App-Dev/project-23s1-GEVIS1/assets/79884124/96678bb1-5ca3-4ddc-97e7-5f012d1c092c)
 
