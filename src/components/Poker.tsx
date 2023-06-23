@@ -120,8 +120,18 @@ function Poker() {
             if (gameData.players[i]?.uid === user.uid || !gameData.players[i]) {
               return null;
             }
+            const playerBorderColor = getBorderColor(
+              gameData.currentTurn === i,
+              i,
+              winnerIndex,
+            );
             if (hand.cards === null || gameData.currentTurn !== -1) {
-              return <HiddenHand key={i.toString()} />;
+              return (
+                <HiddenHand
+                  borderColor={playerBorderColor}
+                  key={i.toString()}
+                />
+              );
             }
             return (
               <OtherHand
@@ -131,7 +141,7 @@ function Poker() {
                     .join('') + i.toString()
                 }
                 hand={hand}
-                currentTurn={gameData.currentTurn === i}
+                borderColor={playerBorderColor}
                 playerName={gameData.players[i].name}
                 playerIndex={i}
                 winnerIndex={winnerIndex}

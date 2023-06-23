@@ -1,30 +1,27 @@
 import { Result } from '../utils/firebase/poker';
-import getBorderColor from '../utils/getBorderColor';
 import { Hand } from '../utils/poker/game';
 import CardComponent from './CardComponent';
 
 interface OtherHandProps {
   hand: Hand;
-  currentTurn: boolean;
   playerName: string;
   playerIndex: number;
   winnerIndex: number;
   result: Result;
+  borderColor: string;
 }
 
 function OtherHand({
   hand,
-  currentTurn,
   playerName,
   playerIndex,
   winnerIndex,
   result,
+  borderColor,
 }: OtherHandProps) {
   if (hand.cards === null) {
     return <div>No cards in hand...</div>;
   }
-
-  const borderColor = getBorderColor(currentTurn, playerIndex, winnerIndex);
 
   return (
     <div
