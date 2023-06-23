@@ -90,7 +90,7 @@ class Poker {
    * Swaps cards at random for a defined number of iterations.
    */
   public shuffleDeck() {
-    const iterations = 1e6;
+    const iterations = this.deck.length * 10;
 
     for (let i = 0; i < iterations; i += 1) {
       const indexA = this.randomCardIndex();
