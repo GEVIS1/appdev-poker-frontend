@@ -11,12 +11,12 @@ import { Player, Result } from '../utils/firebase/poker';
 import endTurn from '../utils/firebase/endTurn';
 import getBorderColor from '../utils/getBorderColor';
 
-// Code that should be in firebase below ===========================================================
+// Code/state that should be in firebase below ====================================================
 const poker = new PokerClass();
 poker.shuffleDeck();
 
 const defaultHand: Hand = poker.dealAHand();
-// Code that should be in firebase above ===========================================================
+// Code/state that should be in firebase above ====================================================
 
 function Poker() {
   const { currentGame, gameData } = useContext(GameContext);
@@ -28,8 +28,11 @@ function Poker() {
   const [winnerIndex, setWinnerIndex] = useState(-1);
   const [borderColor, setBorderColor] = useState('border-green-900');
 
-  // Code that should be in firebase below ===================================================
+  // Code/state that should be in firebase below ==============================================
   const [currentHand, setCurrentHand] = useState<Hand>(defaultHand);
+  const [swappedCards, setSwappedCards] = useState<Array<boolean>>(
+    Array(5).fill(false),
+  );
 
   const changeCard = (index: number) => setCurrentHand((prev) => {
     if (!prev.cards) return prev;
@@ -37,7 +40,16 @@ function Poker() {
     cards[index] = poker.dealACard();
     return { cards } as Hand;
   });
-  // Code that should be in firebase above ===================================================
+
+  const handleCardSwap = (index: number) => {
+    changeCard(index);
+    setSwappedCards((prev) => {
+      const swapped = [...prev];
+      swapped[index] = true;
+      return swapped;
+    });
+  };
+  // Code/state that should be in firebase above =============================================
 
   useEffect(() => {
     if (gameData && user) {
@@ -100,6 +112,19 @@ function Poker() {
       setWinnerIndex(-1);
     }
   }, [gameData]);
+
+  // Reset the players' hand at the start of their turn
+  useEffect(() => {
+    if (gameData && yourIndex === gameData.currentTurn) {
+      try {
+        setCurrentHand(poker.dealAHand());
+      } catch (error) {
+        poker.constructDeck();
+        poker.shuffleDeck();
+        setCurrentHand(poker.dealAHand());
+      }
+    }
+  }, [gameData, yourIndex]);
 
   if (currentGame && gameData && user && yourIndex !== null && gameData.hands) {
     return (
@@ -165,19 +190,21 @@ function Poker() {
                 {currentHand.cards
                   && currentHand.cards.map((card, i) => (
                     <div
-                      key={card.suit + card.rank}
+                      key={i.toString() + card.suit + card.rank}
                       className="flex flex-col justify-center items-center gap-4"
                     >
-                      <CardComponent className="text-9xl" card={card} />
-                      {yourIndex === gameData.currentTurn && (
-                        <button
-                          type="button"
-                          key={i.toString()}
-                          onClick={() => changeCard(i)}
-                          className="bg-yellow-600 rounded-md px-2 py-1 text-white "
-                        >
-                          Swap
-                        </button>
+                      <CardComponent className="text-9xl mb-auto" card={card} />
+                      {yourIndex === gameData.currentTurn
+                        && !swappedCards[i] && (
+                          <button
+                            type="button"
+                            key={i.toString()}
+                            onClick={() => handleCardSwap(i)}
+                            disabled={swappedCards[i]}
+                            className="bg-yellow-600 rounded-md px-2 py-1 text-white "
+                          >
+                            Swap
+                          </button>
                       )}
                     </div>
                   ))}
@@ -185,7 +212,10 @@ function Poker() {
               {yourIndex === gameData.currentTurn && (
                 <button
                   type="button"
-                  onClick={() => endTurn(yourIndex, currentGame, currentHand)}
+                  onClick={() => {
+                    endTurn(yourIndex, currentGame, currentHand);
+                    setSwappedCards(Array(5).fill(false));
+                  }}
                   className="bg-yellow-600 rounded-md px-2 py-1 text-white "
                 >
                   End Turn
