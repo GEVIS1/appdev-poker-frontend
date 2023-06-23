@@ -71,7 +71,7 @@ function Poker() {
    * Set the border color of the player's card div.
    */
   useEffect(() => {
-    if (!yourIndex || !gameData) return;
+    if (yourIndex === null || !gameData) return;
     setBorderColor(
       getBorderColor(gameData.currentTurn === yourIndex, yourIndex, winnerIndex),
     );
