@@ -91,11 +91,7 @@ function Poker() {
        * which in the case of a draw will be the player that joined the game first.
        */
       const scores = gameData.results.map((r: Result) => r.score).sort();
-      // TODO: Debug scoring system and remove this debug statement
-      console.log(scores);
       const highestScore = scores.pop();
-      // TODO: Debug scoring system and remove this debug statement
-      console.log(highestScore);
       const winner = gameData.results.findIndex(
         (r: Result) => r.score === highestScore,
       );
