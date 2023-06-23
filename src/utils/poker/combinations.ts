@@ -180,6 +180,10 @@ const royalFlush = (hand: NonNullableHand): boolean =>
   hand.cards.some((card) => card.rank === 11) &&
   hand.cards.some((card) => card.rank === 10);
 
+/*
+ * Construct a chain of combinations,
+ * from highest value to lowest which will break the loop when a combination is found.
+ */
 const combinations: Array<Combination> = [
   {
     name: 'Royal Flush',

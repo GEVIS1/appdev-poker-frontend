@@ -11,12 +11,12 @@ import { Player, Result } from '../utils/firebase/poker';
 import endTurn from '../utils/firebase/endTurn';
 import getBorderColor from '../utils/getBorderColor';
 
-// Prototype code below ==========================================================================
+// Code that should be in firebase below ===========================================================
 const poker = new PokerClass();
 poker.shuffleDeck();
 
 const defaultHand: Hand = poker.dealAHand();
-// Prototype code above ==========================================================================
+// Code that should be in firebase above ===========================================================
 
 function Poker() {
   const { currentGame, gameData } = useContext(GameContext);
@@ -28,7 +28,7 @@ function Poker() {
   const [winnerIndex, setWinnerIndex] = useState(-1);
   const [borderColor, setBorderColor] = useState('border-green-900');
 
-  // Prototype code below ==========================================================================
+  // Code that should be in firebase below ===================================================
   const [currentHand, setCurrentHand] = useState<Hand>(defaultHand);
 
   const changeCard = (index: number) => setCurrentHand((prev) => {
@@ -37,7 +37,7 @@ function Poker() {
     cards[index] = poker.dealACard();
     return { cards } as Hand;
   });
-  // Prototype code above ==========================================================================
+  // Code that should be in firebase above ===================================================
 
   useEffect(() => {
     if (gameData && user) {
