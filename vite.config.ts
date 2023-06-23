@@ -45,5 +45,14 @@ export default defineConfig({
   test: {
     environment: 'jsdom',
     setupFiles: './test/setup.ts',
+    // eslint-disable-next-line consistent-return
+    onConsoleLog(log) {
+      if (
+        log.includes(
+          'WARNING: You are using the Auth Emulator, which is intended for local testing only.  Do not use with production credentials.',
+        )
+      ) return false;
+      if (log.includes("Null value error. for 'create' @ L6")) return false;
+    },
   },
 });
